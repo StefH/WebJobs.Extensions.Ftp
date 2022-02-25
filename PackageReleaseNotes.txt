@@ -1,0 +1,4 @@
+# 3.0.0 (25 February 2022)
+- #1 Add support for Batch [enhancement]
+
+The full release notes can be found here: https://github.com/StefH/WebJobs.Extensions.Ftp/blob/main/ReleaseNotes.md
