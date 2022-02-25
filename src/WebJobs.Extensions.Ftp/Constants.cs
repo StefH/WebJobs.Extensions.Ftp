@@ -6,7 +6,7 @@ namespace WebJobs.Extensions.Ftp;
 
 internal static class Constants
 {
-    public static Type[] SupportedTypes = { typeof(FtpFile), typeof(FtpStream), typeof(IFtpClient) };
+    public static Type[] SupportedTypes = { typeof(FtpFile), typeof(FtpStream), typeof(FtpFile[]), typeof(FtpStream[]), typeof(IFtpClient) };
 
     public static Type[] SingleTypes = { typeof(FtpFile), typeof(FtpStream) };
 

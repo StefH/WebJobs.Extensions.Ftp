@@ -12,6 +12,8 @@ public class FtpTriggerAttribute : AbstractBaseFtpAttribute
 {
     public string? Folder { get; set; }
 
+    public int BatchSize { get; set; } = 32;
+
     public int PollingIntervalInSeconds { get; set; } = 60;
 
     /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,7 @@ using FluentFTP;
 using Microsoft.Azure.WebJobs.Host.Executors;
 using Microsoft.Azure.WebJobs.Host.Listeners;
 using Stef.Validation;
+using WebJobs.Extensions.Ftp.Extensions;
 using WebJobs.Extensions.Ftp.Models;
 using WebJobs.Extensions.Ftp.Utils;
 
@@ -71,59 +73,90 @@ internal class FtpListener : IListener
         var filteredListItems = listItems
             .Where(li => li.Type == FtpFileSystemObjectType.File)
             .Where(li => li.RawModified > _lastRunningTime)
-            .OrderBy(li => li.RawModified);
+            .OrderBy(li => li.RawModified)
+            .ToArray();
 
         if (Constants.SingleTypes.Contains(_triggerValueType))
         {
             foreach (var item in filteredListItems)
             {
-                await HandleFtpListItemAsync(item, cancellationToken);
+                object value;
+                if (_triggerValueType == typeof(FtpFile))
+                {
+                    value = await HandleFtpFileAsync(item, cancellationToken);
+                }
+                else
+                {
+                    value = await HandleFtpStreamAsync(item, cancellationToken);
+                }
+
+                var triggerData = new TriggeredFunctionData
+                {
+                    TriggerValue = value
+                };
+                await _executor.TryExecuteAsync(triggerData, cancellationToken);
             }
         }
 
         if (Constants.BatchTypes.Contains(_triggerValueType))
         {
+            foreach (var items in filteredListItems.Page(_context.FtpTriggerAttribute.BatchSize))
+            {
+                object value;
+                if (_triggerValueType == typeof(FtpFile[]))
+                {
+                    var list = new List<FtpFile>();
+                    foreach (var item in items)
+                    {
+                        list.Add(await HandleFtpFileAsync(item, cancellationToken));
+                    }
 
+                    value = list.ToArray();
+                }
+                else
+                {
+                    var list = new List<FtpStream>();
+                    foreach (var item in items)
+                    {
+                        list.Add(await HandleFtpStreamAsync(item, cancellationToken));
+                    }
+
+                    value = list.ToArray();
+                }
+
+                var triggerData = new TriggeredFunctionData
+                {
+                    TriggerValue = value
+                };
+                await _executor.TryExecuteAsync(triggerData, cancellationToken);
+            }
         }
     }
 
-    private async Task HandleFtpListItemAsync(FtpListItem item, CancellationToken cancellationToken)
+    private async Task<FtpStream> HandleFtpStreamAsync(FtpListItem item, CancellationToken cancellationToken)
     {
-        object triggerValue;
-        if (_triggerValueType == typeof(FtpFile))
+        var ftpStream = TinyMapperUtils.Instance.MapToFtpStream(item);
+
+        if (_context.FtpTriggerAttribute.IncludeContent)
         {
-            var ftpFile = TinyMapperUtils.Instance.MapToFtpFileItem(item);
-
-            if (_context.FtpTriggerAttribute.IncludeContent)
-            {
-                using var stream = new MemoryStream();
-                await _context.Client.DownloadAsync(stream, item.FullName, token: cancellationToken);
-                ftpFile.Content = stream.ToArray();
-            }
-
-            triggerValue = ftpFile;
-        }
-        else if (_triggerValueType == typeof(FtpStream))
-        {
-            var ftpStream = TinyMapperUtils.Instance.MapToFtpStream(item);
-
-            if (_context.FtpTriggerAttribute.IncludeContent)
-            {
-                ftpStream.Stream = await _context.Client.OpenReadAsync(item.FullName, token: cancellationToken);
-            }
-
-            triggerValue = ftpStream;
-        }
-        else
-        {
-            throw new NotSupportedException($"Invalid trigger value type. Only {string.Join(",", Constants.SupportedTypes.Select(t => t.Name))} are supported.");
+            ftpStream.Stream = await _context.Client.OpenReadAsync(item.FullName, token: cancellationToken);
         }
 
-        var triggerData = new TriggeredFunctionData
+        return ftpStream;
+    }
+
+    private async Task<FtpFile> HandleFtpFileAsync(FtpListItem item, CancellationToken cancellationToken)
+    {
+        var ftpFile = TinyMapperUtils.Instance.MapToFtpFileItem(item);
+
+        if (_context.FtpTriggerAttribute.IncludeContent)
         {
-            TriggerValue = triggerValue
-        };
-        await _executor.TryExecuteAsync(triggerData, cancellationToken);
+            using var stream = new MemoryStream();
+            await _context.Client.DownloadAsync(stream, item.FullName, token: cancellationToken);
+            ftpFile.Content = stream.ToArray();
+        }
+
+        return ftpFile;
     }
 
     /// <summary>
