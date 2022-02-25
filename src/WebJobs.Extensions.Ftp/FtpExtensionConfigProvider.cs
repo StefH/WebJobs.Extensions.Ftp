@@ -1,0 +1,81 @@
+using System.Collections.Concurrent;
+using FluentFTP;
+using Microsoft.Azure.WebJobs.Host.Config;
+using Microsoft.Extensions.Logging;
+using Stef.Validation;
+using WebJobs.Extensions.Ftp.Bindings;
+using WebJobs.Extensions.Ftp.Factories;
+using WebJobs.Extensions.Ftp.Models;
+using WebJobs.Extensions.Ftp.Trigger;
+
+namespace WebJobs.Extensions.Ftp;
+
+/// <summary>
+/// Extension Config Provider class
+/// </summary>
+internal class FtpExtensionConfigProvider : IExtensionConfigProvider
+{
+    private readonly ILogger _logger;
+
+    /// <summary>
+    /// Ftp Service Factory, used to create context.
+    /// </summary>
+    private readonly IFtpClientFactory _clientFactory;
+
+    /// <summary>
+    /// A ConcurrentDictionary to cache the clients. The IFtpClients are cached based on the connection string.
+    /// </summary>
+    private readonly ConcurrentDictionary<string, IFtpClient> _clientCache = new();
+
+    public FtpExtensionConfigProvider(ILogger<FtpExtensionConfigProvider> logger, IFtpClientFactory clientFactory)
+    {
+        _logger = Guard.NotNull(logger);
+        _clientFactory = Guard.NotNull(clientFactory);
+    }
+
+    /// <summary>
+    /// Initialize the extensions
+    /// </summary>
+    /// <param name="context">Extension config context</param>
+    public void Initialize(ExtensionConfigContext context)
+    {
+        Guard.NotNull(context);
+
+        // Add trigger first
+        var triggerRule = context.AddBindingRule<FtpTriggerAttribute>();
+        triggerRule.BindToTrigger(new FtpTriggerBindingProvider(this));
+
+        // Then add bindings
+        var bindingRule = context.AddBindingRule<FtpAttribute>();
+
+        var arguments = new object[] { _logger, this };
+        bindingRule.BindToCollector<FtpFile>(typeof(FtpBindingConverterForIAsyncCollector<>), arguments);
+        bindingRule.BindToCollector<FtpStream>(typeof(FtpBindingConverterForIAsyncCollector<>), arguments);
+
+        bindingRule.BindToInput<IFtpClient>(typeof(FtpBindingConverterForIFtpClient), this);
+    }
+
+    /// <summary>
+    /// Create Trigger context from a new FtpClient and the attribute supplied. (Note that caching is not possible here.)
+    /// </summary>
+    /// <param name="attribute">FtpTriggerAttribute instance</param>
+    /// <returns>FtpTriggerContext instance</returns>
+    public FtpTriggerContext CreateContext(FtpTriggerAttribute attribute)
+    {
+        var connectionString = attribute.GetConnectionString();
+
+        return new FtpTriggerContext(attribute, _clientFactory.CreateFtpClient(connectionString));
+    }
+
+    /// <summary>
+    /// Create Binding Context from a new or cached FtpClient and attribute supplied.
+    /// </summary>
+    /// <param name="attribute">Ftp Attribute</param>
+    /// <returns>Returns FtpBindingContext instance. The </returns>
+    public FtpBindingContext CreateContext(FtpAttribute attribute)
+    {
+        var connectionString = attribute.GetConnectionString();
+
+        return new FtpBindingContext(attribute, _clientCache.GetOrAdd(connectionString, c => _clientFactory.CreateFtpClient(c)));
+    }
+}

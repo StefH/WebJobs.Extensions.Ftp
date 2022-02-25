@@ -1,0 +1,14 @@
+<Project>
+    <PropertyGroup>
+        <Copyright>Copyright © 2022 Stef Heyenrath</Copyright>
+        <Authors>Stef Heyenrath</Authors>
+        <PackageReleaseNotes>See CHANGELOG.md</PackageReleaseNotes>
+        <PackageProjectUrl>https://github.com/StefH/WebJobs.Extensions.Ftp</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/StefH/WebJobs.Extensions.Ftp</RepositoryUrl>
+        <ApplicationIcon>../../resources/icon.ico</ApplicationIcon>
+        <Tags>WebJobs;Extensions;Ftp;Ftps;Trigger;Bindings;</Tags>
+        <Description>This library simplifies the task of adding background processing to your Microsoft Azure Functions and WebJobs. This SDK supports triggering a function when a new Ftp file is uploaded. In addtition these FtpBindings are supported: IAsyncCollector, IFtpClient, FtpFile and FtpStream.</Description>
+    </PropertyGroup>
+</Project>
