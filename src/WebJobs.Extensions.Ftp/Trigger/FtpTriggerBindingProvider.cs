@@ -41,8 +41,11 @@ internal class FtpTriggerBindingProvider : ITriggerBindingProvider
 
         if (!Constants.SupportedTypes.Contains(parameter.ParameterType))
         {
-            throw new InvalidOperationException($"Invalid parameter type. Only {string.Join(",", Constants.SupportedTypes.Select(t => t.Name))} are supported.");
+            throw new InvalidOperationException($"Invalid ParameterType. Only {string.Join(",", Constants.SupportedTypes.Select(t => t.Name))} are supported.");
         }
+
+        Guard.Condition(attribute, a => a.PollingIntervalInSeconds > 0, nameof(FtpTriggerAttribute.PollingIntervalInSeconds));
+        Guard.Condition(attribute, a => a.BatchSize > 0, nameof(FtpTriggerAttribute.BatchSize));
 
         var triggerBinding = new FtpTriggerBinding(parameter.ParameterType, _provider.CreateContext(attribute));
 

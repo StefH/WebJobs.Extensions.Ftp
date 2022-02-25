@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host.Bindings;
@@ -31,7 +31,7 @@ internal class FtpTriggerBinding : ITriggerBinding
     /// Trigger value type
     /// </summary>
     public Type TriggerValueType { get; }
-        
+
     /// <summary>
     /// BindingDataContract
     /// </summary>
@@ -59,7 +59,7 @@ internal class FtpTriggerBinding : ITriggerBinding
     /// <returns>A Task that contains the listener instance</returns>
     public Task<IListener> CreateListenerAsync(ListenerFactoryContext context)
     {
-        var executor = context.Executor;
+        var executor = Guard.NotNull(context).Executor;
         var listener = new FtpListener(TriggerValueType, executor, _context);
 
         return Task.FromResult<IListener>(listener);
