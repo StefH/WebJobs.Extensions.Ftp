@@ -7,10 +7,10 @@ public abstract class AbstractBaseFtpAttribute : Attribute
     public string Connection { get; set; } = null!;
 
     /// <summary>
-    /// Helper method to get connection string from environment variables
+    /// Helper method to get ConnectionString from environment variable. If that fails, use the ConnectionString as-is.
     /// </summary>
     internal string GetConnectionString()
     {
-        return Environment.GetEnvironmentVariable(Connection) ?? throw new ArgumentNullException(nameof(Connection), "Connection is not defined as Environment variable.");
+        return Environment.GetEnvironmentVariable(Connection) ?? Connection;
     }
 }

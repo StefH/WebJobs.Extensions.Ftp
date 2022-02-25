@@ -19,6 +19,14 @@ public static class FtpTriggerSample
         log.LogInformation($"RunFtpTriggerFtpFile >> {ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");
     }
 
+    [FunctionName("FtpTriggerFtpFiles")]
+    public static void RunFtpTriggerFtpFiles(
+        [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingIntervalInSeconds = 10)] FtpFile[] ftpItem,
+        ILogger log)
+    {
+        log.LogWarning($"RunFtpTriggerFtpFiles >> {ftpItem.GetType()} {ftpItem.Length}");
+    }
+
     [FunctionName("FtpTriggerFtpStream")]
     public static async Task RunFtpTriggerFtpStream(
         [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingIntervalInSeconds = 10)] FtpStream ftpStream,

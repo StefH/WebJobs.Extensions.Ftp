@@ -61,6 +61,8 @@ internal class FtpValueBinder : IValueBinder
         {
             FtpFile ftpFile => ftpFile.FullName,
             FtpStream ftpStream => ftpStream.FullName,
+            FtpFile[] ftpFiles => $"{nameof(FtpFile)}[{ftpFiles.Length}]",
+            FtpStream[] ftpStreams => $"{nameof(FtpStream)}[{ftpStreams.Length}]",
 
             _ => throw new InvalidCastException()
         };
