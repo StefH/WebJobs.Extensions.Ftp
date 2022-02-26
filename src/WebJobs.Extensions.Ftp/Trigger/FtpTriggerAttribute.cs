@@ -14,7 +14,9 @@ public class FtpTriggerAttribute : AbstractBaseFtpAttribute
 
     public int BatchSize { get; set; } = 32;
 
-    public int PollingIntervalInSeconds { get; set; } = 60;
+    // public int PollingIntervalInSeconds { get; set; } = int.MaxValue;
+
+    public string? PollingInterval { get; set; }
 
     /// <summary>
     /// If true, the FTP Trigger is invoked when the function starts and if a new file is present. 

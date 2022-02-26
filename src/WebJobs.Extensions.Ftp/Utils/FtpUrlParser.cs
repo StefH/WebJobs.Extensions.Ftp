@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+using System;
+using System.Text.RegularExpressions;
 using WebJobs.Extensions.Ftp.Models.Internal;
 
 namespace WebJobs.Extensions.Ftp.Utils;
@@ -18,12 +19,12 @@ internal static class FtpUrlParser
     /// Server regex pattern
     /// </summary>
     private const string ServerPattern = @"(?<host>[^:]*):?(?<port>\d*)";
-        
+
     /// <summary>
     /// Rest of the connection string regex
     /// </summary>
     private const string Pattern = @"^(?<scheme>(ftp|ftps))://" + @"((?<username>[^:@/]+)(:(?<password>[^:@/]*))?@)?" + ServerPattern + "$";
-        
+
     /// <summary>
     /// Default port
     /// </summary>
@@ -36,13 +37,18 @@ internal static class FtpUrlParser
     /// <returns>Returns the ConnectionParams instance with parsed values</returns>
     public static FtpConnectionParameters Parse(string connectionString)
     {
-        var matches = Regex.Match(connectionString, Pattern);
+        var match = Regex.Match(connectionString, Pattern);
+        if (!match.Success)
+        {
+            throw new ArgumentException($"The ConnectionString '{connectionString}' cannot be parsed to a valid FTP connection string.", nameof(connectionString));
+        }
+
         return new FtpConnectionParameters
         {
-            Host = matches.Groups["host"].ToString(),
-            Port = int.TryParse(matches.Groups["port"].ToString(), out var p) ? p : DefaultPort,
-            Username = matches.Groups["username"].ToString(),
-            Password = matches.Groups["password"].ToString()
+            Host = match.Groups["host"].Value,
+            Port = int.TryParse(match.Groups["port"].Value, out var p) ? p : DefaultPort,
+            Username = match.Groups["username"].Value,
+            Password = match.Groups["password"].Value
         };
     }
 }

@@ -25,6 +25,7 @@ internal class FtpListener : IListener
     private readonly FtpTriggerContext _context;
 
     private DateTime _lastRunningTime = DateTime.MaxValue;
+    private TimeSpan _pollingInterval = TimeSpan.MaxValue;
 
     public FtpListener(Type triggerValueType, ITriggeredFunctionExecutor executor, FtpTriggerContext context)
     {
@@ -52,11 +53,12 @@ internal class FtpListener : IListener
     {
         await _context.Client.ConnectAsync(cancellationToken);
 
+        _pollingInterval = PollingIntervalParser.Parse(_context.FtpTriggerAttribute.PollingInterval);
+
         try
         {
             await RunRecurringTaskAsync(
                 GetListingAndGetFilesAsync,
-                _context.FtpTriggerAttribute.PollingIntervalInSeconds,
                 cancellationToken
             );
         }
@@ -151,7 +153,7 @@ internal class FtpListener : IListener
 
         if (_context.FtpTriggerAttribute.IncludeContent)
         {
-            using var stream = new MemoryStream();
+            await using var stream = new MemoryStream();
             await _context.Client.DownloadAsync(stream, item.FullName, token: cancellationToken);
             ftpFile.Content = stream.ToArray();
         }
@@ -176,7 +178,7 @@ internal class FtpListener : IListener
         return await _context.Client.GetListingAsync(_context.FtpTriggerAttribute.Folder, listOption, cancellationToken);
     }
 
-    private Task RunRecurringTaskAsync(Func<CancellationToken, Task> action, int seconds, CancellationToken token)
+    private Task RunRecurringTaskAsync(Func<CancellationToken, Task> action, CancellationToken token)
     {
         return Task.Run(async () =>
         {
@@ -186,7 +188,7 @@ internal class FtpListener : IListener
             }
             else
             {
-                await Task.Delay(TimeSpan.FromSeconds(seconds), token);
+                await Task.Delay(TimeSpan.FromSeconds(_pollingInterval.Seconds), token);
             }
 
             while (!token.IsCancellationRequested)
@@ -195,8 +197,12 @@ internal class FtpListener : IListener
 
                 _lastRunningTime = DateTime.UtcNow;
 
-                await Task.Delay(TimeSpan.FromSeconds(seconds), token);
+                await Task.Delay(TimeSpan.FromSeconds(_pollingInterval.Seconds), token);
             }
         }, token);
+
     }
+
+    
+
 }
