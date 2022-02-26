@@ -19,7 +19,7 @@ internal static class PollingIntervalParser
         var match = RegEx.Match(value);
         if (!match.Success || !int.TryParse(match.Groups["number"].Value, out var number))
         {
-            throw new ArgumentException($"The PollingInterval with value '{value}' is not valid. It should be in the form of '{RegEx}'.", nameof(FtpTriggerAttribute.PollingInterval));
+            throw new ArgumentException($"The PollingInterval with value '{value}' is not valid. It should be in the form of '{RegEx}'. For example use \"10s\" for 10 seconds.", nameof(FtpTriggerAttribute.PollingInterval));
         }
 
         return match.Groups["unit"].Value[0] switch

@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Host.Bindings;
 using Microsoft.Azure.WebJobs.Host.Listeners;
 using Microsoft.Azure.WebJobs.Host.Protocols;
 using Microsoft.Azure.WebJobs.Host.Triggers;
+using Microsoft.Extensions.Logging;
 using Stef.Validation;
 
 namespace WebJobs.Extensions.Ftp.Trigger;
@@ -14,15 +15,12 @@ namespace WebJobs.Extensions.Ftp.Trigger;
 /// </summary>
 internal class FtpTriggerBinding : ITriggerBinding
 {
+    private readonly ILogger _logger;
     private readonly FtpTriggerContext _context;
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="parameterType"></param>
-    /// <param name="context">FtpTriggerContext instance</param>
-    public FtpTriggerBinding(Type parameterType, FtpTriggerContext context)
+    public FtpTriggerBinding(ILogger logger, Type parameterType, FtpTriggerContext context)
     {
+        _logger = logger;
         TriggerValueType = Guard.NotNull(parameterType);
         _context = Guard.NotNull(context);
     }
@@ -60,7 +58,7 @@ internal class FtpTriggerBinding : ITriggerBinding
     public Task<IListener> CreateListenerAsync(ListenerFactoryContext context)
     {
         var executor = Guard.NotNull(context).Executor;
-        var listener = new FtpListener(TriggerValueType, executor, _context);
+        var listener = new FtpListener(_logger, TriggerValueType, executor, _context);
 
         return Task.FromResult<IListener>(listener);
     }

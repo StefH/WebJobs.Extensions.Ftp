@@ -5,18 +5,18 @@ namespace WebJobs.Extensions.Ftp.Extensions;
 
 internal static class LinqExtensions
 {
-    public static IEnumerable<IEnumerable<T>> Page<T>(this IEnumerable<T> source, int pageSize)
+    public static IEnumerable<IEnumerable<T>> GetBatches<T>(this IEnumerable<T> source, int batchSize)
     {
         using var enumerator = source.GetEnumerator();
 
         while (enumerator.MoveNext())
         {
-            var currentPage = new List<T>(pageSize)
+            var currentPage = new List<T>(batchSize)
             {
                 enumerator.Current
             };
 
-            while (currentPage.Count < pageSize && enumerator.MoveNext())
+            while (currentPage.Count < batchSize && enumerator.MoveNext())
             {
                 currentPage.Add(enumerator.Current);
             }
