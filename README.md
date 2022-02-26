@@ -1,7 +1,7 @@
 # WebJobs.Extensions.Ftp
 
 An extension for WebJobs which uses [FluentFTP](https://github.com/robinrodricks/FluentFTP) to support:
-- Ftp Trigger on a new FtpFile or FtpStream
+- Ftp Trigger on a new FtpFile, FtpFile[], FtpStream and FtpStream[]. 
 - Ftp Bindings on: IAsyncCollector, IFtpClient, FtpFile and FtpStream
 
 ## NuGet
