@@ -9,12 +9,12 @@ namespace WebJobs.Extensions.Ftp.Bindings;
 internal class FtpBindingContext
 {
     /// <summary>
-    /// Ftp Binding attribute
+    /// Ftp Binding attribute.
     /// </summary>
     public FtpAttribute FtpAttribute { get; }
 
     /// <summary>
-    /// <c>FtpClient</c> instance to connect FTP
+    /// <c>FtpClient</c> instance to connect FTP.
     /// </summary>
     public IFtpClient Client { get; }
 
@@ -22,7 +22,7 @@ internal class FtpBindingContext
     /// Constructor
     /// </summary>
     /// <param name="ftpAttribute">Nats Binding Attribute</param>
-    /// <param name="client">Nats Client</param>
+    /// <param name="client">FtpClient</param>
     public FtpBindingContext(FtpAttribute ftpAttribute, IFtpClient client)
     {
         FtpAttribute = Guard.NotNull(ftpAttribute);

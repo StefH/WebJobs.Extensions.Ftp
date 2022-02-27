@@ -62,10 +62,15 @@ internal class FtpListener : IListener
 
             await RunRecurringTaskAsync(GetListingAndGetFilesAsync, cancellationToken);
         }
+        catch (FtpAuthenticationException ftpEx)
+        {
+            _logger.LogError(ftpEx, "User '{user}' is unable to connect to '{host}'. Please check credentials.", _context.Client.Credentials.UserName, _context.Client.Host);
+            throw;
+        }
         catch (Exception ex)
         {
             // Ignore any Exception and only log the exception
-            _logger.LogError(ex, ex.Message);
+            _logger.LogWarning(ex, ex.Message);
         }
     }
 
@@ -97,12 +102,18 @@ internal class FtpListener : IListener
             if (_triggerValueType == typeof(FtpFile))
             {
                 var file = await HandleFtpFileAsync(item, cancellationToken);
-                await TryExecuteAsync(cancellationToken, file);
+                if (file != null)
+                {
+                    await TryExecuteAsync(cancellationToken, FileType.Single, file);
+                }
             }
             else
             {
                 var stream = await HandleFtpStreamAsync(item, cancellationToken);
-                await TryExecuteAsync(cancellationToken, stream);
+                if (stream != null)
+                {
+                    await TryExecuteAsync(cancellationToken, FileType.Single, stream);
+                }
             }
         }
     }
@@ -123,7 +134,7 @@ internal class FtpListener : IListener
                     }
                 }
 
-                await TryExecuteAsync(cancellationToken, files.ToArray());
+                await TryExecuteAsync(cancellationToken, FileType.Batch, files.ToArray());
             }
             else
             {
@@ -137,23 +148,23 @@ internal class FtpListener : IListener
                     }
                 }
 
-                await TryExecuteAsync(cancellationToken, streams.ToArray());
+                await TryExecuteAsync(cancellationToken, FileType.Batch, streams.ToArray());
             }
         }
     }
 
-    private async Task TryExecuteAsync<T>(CancellationToken cancellationToken, params T?[]? items)
+    private async Task TryExecuteAsync<T>(CancellationToken cancellationToken, FileType type, params T[] items)
         where T : class
     {
-        if (items == null || items.Length == 0)
+        if (items.Length == 0)
         {
-            // Do not trigger for null file or empty list
+            // Do not trigger when no files (empty list).
             return;
         }
 
         var triggerData = new TriggeredFunctionData
         {
-            TriggerValue = items.Length == 1 ? items[0] : items
+            TriggerValue = type == FileType.Single ? items[0] : items
         };
         await _executor.TryExecuteAsync(triggerData, cancellationToken);
     }
@@ -220,7 +231,7 @@ internal class FtpListener : IListener
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unable to get listing for folder '{folder}'. No items will be included in the trigger value.", _context.FtpTriggerAttribute.Folder ?? "/");
+            _logger.LogWarning(ex, "Unable to get listing for folder '{folder}'. No items will be included in the trigger value.", _context.FtpTriggerAttribute.Folder ?? "/");
             return Array.Empty<FtpListItem>();
         }
     }

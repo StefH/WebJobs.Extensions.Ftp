@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using WebJobs.Extensions.Ftp.Extensions;
 using WebJobs.Extensions.Ftp.Models.Internal;
 
 namespace WebJobs.Extensions.Ftp.Utils;
@@ -47,8 +48,8 @@ internal static class FtpUrlParser
         {
             Host = match.Groups["host"].Value,
             Port = int.TryParse(match.Groups["port"].Value, out var p) ? p : DefaultPort,
-            Username = match.Groups["username"].Value,
-            Password = match.Groups["password"].Value
+            Username = match.Groups["username"].GetOptionalStringValue(),
+            Password = match.Groups["password"].GetOptionalStringValue()
         };
     }
 }

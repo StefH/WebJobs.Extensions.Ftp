@@ -13,7 +13,7 @@ public static class FtpTriggerSample
 {
     [FunctionName("FtpTriggerFtpFile")]
     public static void RunFtpTriggerFtpFile(
-        [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingInterval = "10s")] FtpFile ftpItem,
+        [FtpTrigger("FtpConnectionAnonymous", Folder = "inbox", PollingInterval = "10s")] FtpFile ftpItem,
         ILogger log)
     {
         log.LogInformation($"RunFtpTriggerFtpFile >> {ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");

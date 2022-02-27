@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Stef.Validation;
 using WebJobs.Extensions.Ftp.Factories;
@@ -23,6 +23,8 @@ public static class FtpWebJobsBuilderExtensions
         builder.AddExtension<FtpExtensionConfigProvider>();
 
         builder.Services.AddSingleton<IFtpClientFactory, FtpClientFactory>();
+
+        builder.Services.AddLogging();
 
         return builder;
     }

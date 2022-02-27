@@ -8,23 +8,43 @@ namespace WebJobs.Extensions.Ftp.Trigger;
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 [Binding]
-public class FtpTriggerAttribute : AbstractBaseFtpAttribute
+public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
 {
+    /// <summary>
+    /// The folder to listen on. Is optional.
+    /// </summary>
     public string? Folder { get; set; }
 
+    /// <summary>
+    /// The maximum number of items returned in case an array is required.
+    ///
+    /// Default value is <c>32</c>.
+    /// </summary>
     public int BatchSize { get; set; } = 32;
 
-    // public int PollingIntervalInSeconds { get; set; } = int.MaxValue;
-
+    /// <summary>
+    /// The polling interval.
+    ///
+    /// Defined as {number}{s|m|h|d}.
+    /// Examples:
+    /// - 10s poll every 10 seconds
+    /// - 2m  poll every 2 minutes
+    ///
+    /// Default value is <c>1 minute</c>. 
+    /// </summary>
     public string? PollingInterval { get; set; }
 
     /// <summary>
-    /// If true, the FTP Trigger is invoked when the function starts and if a new file is present. 
+    /// If true, polling for new files will start when the function starts.
+    ///
+    /// Default value is <c>true</c>.
     /// </summary>
     public bool RunOnStartup { get; set; } = true;
 
     /// <summary>
     /// Gets files within subdirectories as well. Adds the -r option to the LIST command. Some servers may not support this feature.
+    ///
+    /// Default value is <c>false</c>.
     /// </summary>
     public bool Recursive { get; set; }
 
@@ -34,4 +54,11 @@ public class FtpTriggerAttribute : AbstractBaseFtpAttribute
     /// Default value is <c>true</c>.
     /// </summary>
     public bool IncludeContent { get; set; } = true;
+
+    public FtpTriggerAttribute()
+    {}
+
+    public FtpTriggerAttribute(string connection) : base(connection)
+    {
+    }
 }
