@@ -212,9 +212,17 @@ internal class FtpListener : IListener
 
     private async Task<FtpListItem[]> GetListingAsync(CancellationToken cancellationToken)
     {
-        var listOption = _context.FtpTriggerAttribute.Recursive ? FtpListOption.Recursive : FtpListOption.Auto;
+        try
+        {
+            var listOption = _context.FtpTriggerAttribute.Recursive ? FtpListOption.Recursive : FtpListOption.Auto;
 
-        return await _context.Client.GetListingAsync(_context.FtpTriggerAttribute.Folder, listOption, cancellationToken);
+            return await _context.Client.GetListingAsync(_context.FtpTriggerAttribute.Folder, listOption, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unable to get listing for folder '{folder}'. No items will be included in the trigger value.", _context.FtpTriggerAttribute.Folder ?? "/");
+            return Array.Empty<FtpListItem>();
+        }
     }
 
     private Task RunRecurringTaskAsync(Func<CancellationToken, Task> action, CancellationToken token)
