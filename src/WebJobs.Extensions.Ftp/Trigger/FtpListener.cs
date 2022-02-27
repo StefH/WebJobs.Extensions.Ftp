@@ -54,17 +54,17 @@ internal class FtpListener : IListener
     /// <returns>A Task returned from RecurringTask method</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await _context.Client.ConnectAsync(cancellationToken);
-
         _pollingInterval = PollingIntervalParser.Parse(_context.FtpTriggerAttribute.PollingInterval);
 
         try
         {
+            await _context.Client.ConnectAsync(cancellationToken);
+
             await RunRecurringTaskAsync(GetListingAndGetFilesAsync, cancellationToken);
         }
         catch (Exception ex)
         {
-            // Ignore any Exception and only log
+            // Ignore any Exception and only log the exception
             _logger.LogError(ex, ex.Message);
         }
     }

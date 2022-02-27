@@ -26,6 +26,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebJobs.Extensions.Ftp4", "src\WebJobs.Extensions.Ftp4\WebJobs.Extensions.Ftp4.csproj", "{DC826E1F-54DD-433E-896F-35F75EDE1B86}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{6486DF70-1779-4853-B97F-12F5DE40F982}"
+	ProjectSection(SolutionItems) = preProject
+		_\custom-extension-part1.md = _\custom-extension-part1.md
+		_\custom-extension-part2.md = _\custom-extension-part2.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +63,7 @@ Global
 		{9D49B43D-AF6E-4685-A6AE-A4B70BC52000} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 		{CB53BC0E-9A72-4208-B1D0-75D6C60DAED3} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 		{DC826E1F-54DD-433E-896F-35F75EDE1B86} = {4A925250-CB80-4530-A60F-3F28037F13FD}
+		{6486DF70-1779-4853-B97F-12F5DE40F982} = {A0801AC7-D3C2-40B4-9A86-D40E2D032F11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8ED04F5F-E0ED-4242-9DC7-CC6D6EF14892}
