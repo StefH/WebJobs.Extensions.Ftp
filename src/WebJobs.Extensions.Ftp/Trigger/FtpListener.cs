@@ -154,11 +154,10 @@ internal class FtpListener : IListener
     }
 
     private async Task TryExecuteAsync<T>(CancellationToken cancellationToken, FileType type, params T[] items)
-        where T : class
     {
         if (items.Length == 0)
         {
-            // Do not trigger when no files (empty list).
+            // Do not trigger when no items.
             return;
         }
 
