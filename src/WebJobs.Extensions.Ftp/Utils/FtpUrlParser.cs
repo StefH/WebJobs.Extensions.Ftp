@@ -47,7 +47,7 @@ internal static class FtpUrlParser
         return new FtpConnectionParameters
         {
             Host = match.Groups["host"].Value,
-            Port = int.TryParse(match.Groups["port"].Value, out var p) ? p : DefaultPort,
+            Port = int.TryParse(match.Groups["port"].Value, out var port) ? port : DefaultPort,
             Username = match.Groups["username"].GetOptionalStringValue(),
             Password = match.Groups["password"].GetOptionalStringValue()
         };
