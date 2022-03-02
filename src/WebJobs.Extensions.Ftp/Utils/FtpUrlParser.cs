@@ -7,7 +7,7 @@ namespace WebJobs.Extensions.Ftp.Utils;
 
 /// <summary>
 /// FtpUrlParser, a utility class to parse the Ftp Connection String.
-/// The connection string is in the form of: ftp://<username>:<password>@<host>:<port>
+/// The connection string is in the form of: ftp(s)://{username}:{password}@{host}:{port}
 /// </summary>
 /// <example>
 /// <code>

@@ -20,6 +20,7 @@ internal static class LinqExtensions
             {
                 currentPage.Add(enumerator.Current);
             }
+
             yield return new ReadOnlyCollection<T>(currentPage);
         }
     }
