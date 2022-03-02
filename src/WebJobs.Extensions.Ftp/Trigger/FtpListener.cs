@@ -19,7 +19,7 @@ namespace WebJobs.Extensions.Ftp.Trigger;
 /// The FtpListener class.
 /// Implements the <c>IListener</c> interface. Contains the code to connect to a Ftp server.
 /// </summary>
-internal class FtpListener : IListener
+internal sealed class FtpListener : IListener
 {
     private readonly ILogger _logger;
     private readonly Type _triggerValueType;
