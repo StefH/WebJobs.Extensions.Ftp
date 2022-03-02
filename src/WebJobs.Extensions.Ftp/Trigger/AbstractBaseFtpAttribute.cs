@@ -1,4 +1,5 @@
 using System;
+using Stef.Validation;
 
 namespace WebJobs.Extensions.Ftp.Trigger;
 
@@ -12,14 +13,16 @@ public abstract class AbstractBaseFtpAttribute : Attribute
 
     protected AbstractBaseFtpAttribute(string connection)
     {
-        Connection = connection;
+        Connection = Guard.NotNullOrEmpty(connection);
     }
 
     /// <summary>
-    /// Helper method to get ConnectionString from environment variable. If that fails, use the ConnectionString as-is.
+    /// Helper method to get ConnectionString from environment variable.
+    /// If that fails, use the ConnectionString as-is.
+    /// Else throw.
     /// </summary>
     internal string GetConnectionString()
     {
-        return Environment.GetEnvironmentVariable(Connection) ?? Connection;
+        return Guard.NotNullOrEmpty(Environment.GetEnvironmentVariable(Connection) ?? Connection);
     }
 }

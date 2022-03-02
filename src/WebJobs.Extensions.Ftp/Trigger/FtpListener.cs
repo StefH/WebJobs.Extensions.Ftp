@@ -215,9 +215,17 @@ internal class FtpListener : IListener
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns></returns>
-    public Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
-        return _context.Client.DisconnectAsync(cancellationToken);
+        try
+        {
+            await _context.Client.DisconnectAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            // Ignore any Exception and only log the exception
+            _logger.LogError(ex, "Error during stopping {client}.", nameof(FtpClient));
+        }
     }
 
     private async Task<FtpListItem[]> GetListingAsync(CancellationToken cancellationToken)
@@ -257,6 +265,5 @@ internal class FtpListener : IListener
                 await Task.Delay(TimeSpan.FromSeconds(_pollingInterval.Seconds), token);
             }
         }, token);
-
     }
 }
