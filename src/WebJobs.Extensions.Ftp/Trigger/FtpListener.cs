@@ -224,7 +224,7 @@ internal class FtpListener : IListener
         catch (Exception ex)
         {
             // Ignore any Exception and only log the exception
-            _logger.LogError(ex, "Error during stopping {client}.", nameof(FtpClient));
+            _logger.LogWarning(ex, "Error during stopping {client}.", nameof(FtpClient));
         }
     }
 
