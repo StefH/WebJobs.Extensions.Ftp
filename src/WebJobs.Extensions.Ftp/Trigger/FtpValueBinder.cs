@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host.Bindings;
@@ -61,8 +62,8 @@ internal class FtpValueBinder : IValueBinder
         {
             FtpFile ftpFile => ftpFile.FullName,
             FtpStream ftpStream => ftpStream.FullName,
-            FtpFile[] ftpFiles => $"{nameof(FtpFile)}[{ftpFiles.Length}]",
-            FtpStream[] ftpStreams => $"{nameof(FtpStream)}[{ftpStreams.Length}]",
+            FtpFile[] ftpFiles => $"{string.Join(", ", ftpFiles.Select(f => f.FullName))}",
+            FtpStream[] ftpStreams => $"{string.Join(", ", ftpStreams.Select(f => f.FullName))}",
 
             _ => throw new InvalidCastException()
         };

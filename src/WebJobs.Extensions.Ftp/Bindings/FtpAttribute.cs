@@ -5,11 +5,22 @@ using WebJobs.Extensions.Ftp.Trigger;
 namespace WebJobs.Extensions.Ftp.Bindings;
 
 /// <summary>
-/// <c>Attribute</c> class for Trigger
+/// <c>Attribute</c> class for Binding
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 [Binding]
-public class FtpAttribute : AbstractBaseFtpAttribute
+public sealed class FtpAttribute : AbstractBaseFtpAttribute
 {
+    /// <summary>
+    /// The folder to listen on. Is optional.
+    /// </summary>
     public string? Folder { get; set; }
+
+    public FtpAttribute()
+    {
+    }
+
+    public FtpAttribute(string connection) : base(connection)
+    {
+    }
 }

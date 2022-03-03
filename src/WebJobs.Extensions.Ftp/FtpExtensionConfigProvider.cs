@@ -43,7 +43,7 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
 
         // Add trigger first
         var triggerRule = context.AddBindingRule<FtpTriggerAttribute>();
-        triggerRule.BindToTrigger(new FtpTriggerBindingProvider(this));
+        triggerRule.BindToTrigger(new FtpTriggerBindingProvider(_logger, this));
 
         // Then add bindings
         var bindingRule = context.AddBindingRule<FtpAttribute>();

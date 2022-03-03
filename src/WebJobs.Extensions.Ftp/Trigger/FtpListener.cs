@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FluentFTP;
 using Microsoft.Azure.WebJobs.Host.Executors;
 using Microsoft.Azure.WebJobs.Host.Listeners;
+using Microsoft.Extensions.Logging;
 using Stef.Validation;
 using WebJobs.Extensions.Ftp.Extensions;
 using WebJobs.Extensions.Ftp.Models;
@@ -18,16 +19,19 @@ namespace WebJobs.Extensions.Ftp.Trigger;
 /// The FtpListener class.
 /// Implements the <c>IListener</c> interface. Contains the code to connect to a Ftp server.
 /// </summary>
-internal class FtpListener : IListener
+internal sealed class FtpListener : IListener
 {
+    private readonly ILogger _logger;
     private readonly Type _triggerValueType;
     private readonly ITriggeredFunctionExecutor _executor;
     private readonly FtpTriggerContext _context;
 
     private DateTime _lastRunningTime = DateTime.MaxValue;
+    private TimeSpan _pollingInterval = TimeSpan.MaxValue;
 
-    public FtpListener(Type triggerValueType, ITriggeredFunctionExecutor executor, FtpTriggerContext context)
+    public FtpListener(ILogger logger, Type triggerValueType, ITriggeredFunctionExecutor executor, FtpTriggerContext context)
     {
+        _logger = Guard.NotNull(logger);
         _triggerValueType = Guard.NotNull(triggerValueType);
         _executor = Guard.NotNull(executor);
         _context = Guard.NotNull(context);
@@ -50,19 +54,23 @@ internal class FtpListener : IListener
     /// <returns>A Task returned from RecurringTask method</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await _context.Client.ConnectAsync(cancellationToken);
+        _pollingInterval = PollingIntervalParser.Parse(_context.FtpTriggerAttribute.PollingInterval);
 
         try
         {
-            await RunRecurringTaskAsync(
-                GetListingAndGetFilesAsync,
-                _context.FtpTriggerAttribute.PollingIntervalInSeconds,
-                cancellationToken
-            );
+            await _context.Client.ConnectAsync(cancellationToken);
+
+            await RunRecurringTaskAsync(GetListingAndGetFilesAsync, cancellationToken);
         }
-        catch (TaskCanceledException)
+        catch (FtpAuthenticationException ftpEx)
         {
-            // Ignore TaskCanceledException
+            _logger.LogError(ftpEx, "User '{user}' is unable to connect to '{host}'. Please check credentials.", _context.Client.Credentials.UserName, _context.Client.Host);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // Ignore any Exception and only log the exception
+            _logger.LogWarning(ex, ex.Message);
         }
     }
 
@@ -78,82 +86,125 @@ internal class FtpListener : IListener
 
         if (Constants.SingleTypes.Contains(_triggerValueType))
         {
-            foreach (var item in filteredListItems)
-            {
-                object value;
-                if (_triggerValueType == typeof(FtpFile))
-                {
-                    value = await HandleFtpFileAsync(item, cancellationToken);
-                }
-                else
-                {
-                    value = await HandleFtpStreamAsync(item, cancellationToken);
-                }
-
-                var triggerData = new TriggeredFunctionData
-                {
-                    TriggerValue = value
-                };
-                await _executor.TryExecuteAsync(triggerData, cancellationToken);
-            }
+            await ProcessSingleAsync(cancellationToken, filteredListItems);
         }
 
         if (Constants.BatchTypes.Contains(_triggerValueType))
         {
-            foreach (var items in filteredListItems.Page(_context.FtpTriggerAttribute.BatchSize))
+            await ProcessBatchAsync(cancellationToken, filteredListItems);
+        }
+    }
+
+    private async Task ProcessSingleAsync(CancellationToken cancellationToken, FtpListItem[] filteredListItems)
+    {
+        foreach (var item in filteredListItems)
+        {
+            if (_triggerValueType == typeof(FtpFile))
             {
-                object value;
-                if (_triggerValueType == typeof(FtpFile[]))
+                var file = await HandleFtpFileAsync(item, cancellationToken);
+                if (file != null)
                 {
-                    var list = new List<FtpFile>();
-                    foreach (var item in items)
-                    {
-                        list.Add(await HandleFtpFileAsync(item, cancellationToken));
-                    }
-
-                    value = list.ToArray();
+                    await TryExecuteAsync(cancellationToken, FileType.Single, file);
                 }
-                else
+            }
+            else
+            {
+                var stream = await HandleFtpStreamAsync(item, cancellationToken);
+                if (stream != null)
                 {
-                    var list = new List<FtpStream>();
-                    foreach (var item in items)
-                    {
-                        list.Add(await HandleFtpStreamAsync(item, cancellationToken));
-                    }
-
-                    value = list.ToArray();
+                    await TryExecuteAsync(cancellationToken, FileType.Single, stream);
                 }
-
-                var triggerData = new TriggeredFunctionData
-                {
-                    TriggerValue = value
-                };
-                await _executor.TryExecuteAsync(triggerData, cancellationToken);
             }
         }
     }
 
-    private async Task<FtpStream> HandleFtpStreamAsync(FtpListItem item, CancellationToken cancellationToken)
+    private async Task ProcessBatchAsync(CancellationToken cancellationToken, FtpListItem[] filteredListItems)
+    {
+        foreach (var items in filteredListItems.GetBatches(_context.FtpTriggerAttribute.BatchSize))
+        {
+            if (_triggerValueType == typeof(FtpFile[]))
+            {
+                var files = new List<FtpFile>();
+                foreach (var item in items)
+                {
+                    var file = await HandleFtpFileAsync(item, cancellationToken);
+                    if (file != null)
+                    {
+                        files.Add(file);
+                    }
+                }
+
+                await TryExecuteAsync(cancellationToken, FileType.Batch, files.ToArray());
+            }
+            else
+            {
+                var streams = new List<FtpStream>();
+                foreach (var item in items)
+                {
+                    var stream = await HandleFtpStreamAsync(item, cancellationToken);
+                    if (stream != null)
+                    {
+                        streams.Add(stream);
+                    }
+                }
+
+                await TryExecuteAsync(cancellationToken, FileType.Batch, streams.ToArray());
+            }
+        }
+    }
+
+    private async Task TryExecuteAsync<T>(CancellationToken cancellationToken, FileType type, params T[] items)
+    {
+        if (items.Length == 0)
+        {
+            // Do not trigger when no items.
+            return;
+        }
+
+        var triggerData = new TriggeredFunctionData
+        {
+            TriggerValue = type == FileType.Single ? items[0] : items
+        };
+        await _executor.TryExecuteAsync(triggerData, cancellationToken);
+    }
+
+    private async Task<FtpStream?> HandleFtpStreamAsync(FtpListItem item, CancellationToken cancellationToken)
     {
         var ftpStream = TinyMapperUtils.Instance.MapToFtpStream(item);
 
         if (_context.FtpTriggerAttribute.IncludeContent)
         {
-            ftpStream.Stream = await _context.Client.OpenReadAsync(item.FullName, token: cancellationToken);
+            try
+            {
+                ftpStream.Stream = await _context.Client.OpenReadAsync(item.FullName, token: cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to open the file '{fullName}' for reading, this {type} will not be included in the trigger value.", item.FullName, typeof(FtpStream));
+                return null;
+            }
         }
 
         return ftpStream;
     }
 
-    private async Task<FtpFile> HandleFtpFileAsync(FtpListItem item, CancellationToken cancellationToken)
+    private async Task<FtpFile?> HandleFtpFileAsync(FtpListItem item, CancellationToken cancellationToken)
     {
         var ftpFile = TinyMapperUtils.Instance.MapToFtpFileItem(item);
 
         if (_context.FtpTriggerAttribute.IncludeContent)
         {
-            using var stream = new MemoryStream();
-            await _context.Client.DownloadAsync(stream, item.FullName, token: cancellationToken);
-            ftpFile.Content = stream.ToArray();
+            try
+            {
+                await using var stream = new MemoryStream();
+                await _context.Client.DownloadAsync(stream, item.FullName, token: cancellationToken);
+                ftpFile.Content = stream.ToArray();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to download file '{fullName}', this {type} will not be included in the trigger value.", item.FullName, typeof(FtpFile));
+                return null;
+            }
         }
 
         return ftpFile;
@@ -164,19 +215,35 @@ internal class FtpListener : IListener
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns></returns>
-    public Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
-        return _context.Client.DisconnectAsync(cancellationToken);
+        try
+        {
+            await _context.Client.DisconnectAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            // Ignore any Exception and only log the exception
+            _logger.LogWarning(ex, "Error during stopping {client}.", nameof(FtpClient));
+        }
     }
 
     private async Task<FtpListItem[]> GetListingAsync(CancellationToken cancellationToken)
     {
-        var listOption = _context.FtpTriggerAttribute.Recursive ? FtpListOption.Recursive : FtpListOption.Auto;
+        try
+        {
+            var listOption = _context.FtpTriggerAttribute.Recursive ? FtpListOption.Recursive : FtpListOption.Auto;
 
-        return await _context.Client.GetListingAsync(_context.FtpTriggerAttribute.Folder, listOption, cancellationToken);
+            return await _context.Client.GetListingAsync(_context.FtpTriggerAttribute.Folder, listOption, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Unable to get listing for folder '{folder}'. No items will be included in the trigger value.", _context.FtpTriggerAttribute.Folder ?? "/");
+            return Array.Empty<FtpListItem>();
+        }
     }
 
-    private Task RunRecurringTaskAsync(Func<CancellationToken, Task> action, int seconds, CancellationToken token)
+    private Task RunRecurringTaskAsync(Func<CancellationToken, Task> action, CancellationToken token)
     {
         return Task.Run(async () =>
         {
@@ -186,7 +253,7 @@ internal class FtpListener : IListener
             }
             else
             {
-                await Task.Delay(TimeSpan.FromSeconds(seconds), token);
+                await Task.Delay(TimeSpan.FromSeconds(_pollingInterval.Seconds), token);
             }
 
             while (!token.IsCancellationRequested)
@@ -195,7 +262,7 @@ internal class FtpListener : IListener
 
                 _lastRunningTime = DateTime.UtcNow;
 
-                await Task.Delay(TimeSpan.FromSeconds(seconds), token);
+                await Task.Delay(TimeSpan.FromSeconds(_pollingInterval.Seconds), token);
             }
         }, token);
     }

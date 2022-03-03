@@ -27,7 +27,7 @@ Similar to Triggers, when the system starts, it searches for a class that implem
 
 # Creating Custom binding
 
-As stated before, we are creating a NATS extension here. We will use Visual Studio for development. We will also use the NATS client library [MyNatsClient](https://github.com/danielwertheim/mynatsclient). MyNatsClient is a handy library for .NET to connect to NATS.
+As stated before, we are creating a NATS extension here. We will use Visual Studio for development. We will also use the FtpClient library [MyNatsClient](https://github.com/danielwertheim/mynatsclient). MyNatsClient is a handy library for .NET to connect to NATS.
 
 Custom Extension is a Standard .NET Library. You need to add the following packages using NuGet. Open the NuGet manager and search for:
 

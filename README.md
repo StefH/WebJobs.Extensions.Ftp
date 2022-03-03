@@ -35,7 +35,7 @@ Add a `FtpConnection` property with the url to the FTP server.
 ``` c#
 [FunctionName("FtpTriggerFtpFile")]
 public static void RunFtpTriggerFtpFile(
-    [FtpTrigger(Connection = "FtpConnection", Folder = "inbox")] FtpFile ftpItem,
+    [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingInterval = "30s")] FtpFile ftpItem,
     ILogger log)
 {
     log.LogInformation($"{ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");

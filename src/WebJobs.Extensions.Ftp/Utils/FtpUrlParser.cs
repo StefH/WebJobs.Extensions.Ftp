@@ -1,11 +1,13 @@
-﻿using System.Text.RegularExpressions;
+using System;
+using System.Text.RegularExpressions;
+using WebJobs.Extensions.Ftp.Extensions;
 using WebJobs.Extensions.Ftp.Models.Internal;
 
 namespace WebJobs.Extensions.Ftp.Utils;
 
 /// <summary>
 /// FtpUrlParser, a utility class to parse the Ftp Connection String.
-/// The connection string is in the form of: ftp://<username>:<password>@<host>:<port>
+/// The connection string is in the form of: ftp(s)://{username}:{password}@{host}:{port}
 /// </summary>
 /// <example>
 /// <code>
@@ -18,12 +20,12 @@ internal static class FtpUrlParser
     /// Server regex pattern
     /// </summary>
     private const string ServerPattern = @"(?<host>[^:]*):?(?<port>\d*)";
-        
+
     /// <summary>
     /// Rest of the connection string regex
     /// </summary>
     private const string Pattern = @"^(?<scheme>(ftp|ftps))://" + @"((?<username>[^:@/]+)(:(?<password>[^:@/]*))?@)?" + ServerPattern + "$";
-        
+
     /// <summary>
     /// Default port
     /// </summary>
@@ -36,13 +38,18 @@ internal static class FtpUrlParser
     /// <returns>Returns the ConnectionParams instance with parsed values</returns>
     public static FtpConnectionParameters Parse(string connectionString)
     {
-        var matches = Regex.Match(connectionString, Pattern);
+        var match = Regex.Match(connectionString, Pattern);
+        if (!match.Success)
+        {
+            throw new ArgumentException($"The ConnectionString '{connectionString}' cannot be parsed to a valid FTP connection string.", nameof(connectionString));
+        }
+
         return new FtpConnectionParameters
         {
-            Host = matches.Groups["host"].ToString(),
-            Port = int.TryParse(matches.Groups["port"].ToString(), out var p) ? p : DefaultPort,
-            Username = matches.Groups["username"].ToString(),
-            Password = matches.Groups["password"].ToString()
+            Host = match.Groups["host"].Value,
+            Port = int.TryParse(match.Groups["port"].Value, out var port) ? port : DefaultPort,
+            Username = match.Groups["username"].GetOptionalStringValue(),
+            Password = match.Groups["password"].GetOptionalStringValue()
         };
     }
 }

@@ -6,9 +6,9 @@ internal class FtpConnectionParameters
 
     public int Port { get; internal set; }
 
-    public string Username { get; internal set; } = null!;
+    public string? Username { get; internal set; }
 
-    public string Password { get; internal set; } = null!;
+    public string? Password { get; internal set; }
 
     /// <summary>
     /// HasCredentials

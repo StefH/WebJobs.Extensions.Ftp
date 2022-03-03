@@ -21,6 +21,10 @@
 
     <ItemGroup>
         <PackageReference Include="FluentFTP" Version="37.0.1" />
+        <PackageReference Include="IDisposableAnalyzers" Version="4.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
             <PrivateAssets>all</PrivateAssets>
