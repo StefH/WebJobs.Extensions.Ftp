@@ -1,4 +1,4 @@
-# 3.0.0 (25 February 2022)
-- #1 Add support for Batch [enhancement]
+# 4.0.1 (03 March 2022)
+- #2 Change PollingInterval to a string value + add code to handle errors [enhancement]
 
 The full release notes can be found here: https://github.com/StefH/WebJobs.Extensions.Ftp/blob/main/ReleaseNotes.md
