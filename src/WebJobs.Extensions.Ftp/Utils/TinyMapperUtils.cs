@@ -26,8 +26,8 @@ internal sealed class TinyMapperUtils
         return TinyMapper.Map<FtpStream>(ftpListItem);
     }
 
-    public FtpClientOptions MapToFtpClientOptions(FtpClientOptions options)
+    public void Map(FtpClientOptions source, FtpClientOptions target)
     {
-        return TinyMapper.Map<FtpClientOptions>(options);
+        TinyMapper.Map(source, target);
     }
 }

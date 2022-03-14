@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddFtpClient(this IServiceCollection services, string connectionString)
-{
+    {
         return AddFtpClient(services, Constants.DefaultFtpClientName, connectionString);
     }
 
@@ -39,14 +39,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddFtpClient(this IServiceCollection services, string name, FtpClientOptions options)
     {
-        return AddFtpClient(services, name,
-            configure =>
-            {
-                configure.Host = options.Host;
-                configure.Port = options.Port;
-                configure.Username = options.Username;
-                configure.Password = options.Password;
-            });
+        return AddFtpClient(services, name, configure => TinyMapperUtils.Instance.Map(options, configure));
     }
 
     public static IServiceCollection AddFtpClient(this IServiceCollection services, Action<FtpClientOptions> configureOptions)
