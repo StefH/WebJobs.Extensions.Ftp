@@ -9,5 +9,10 @@
         "Host": "localhost",
         "Username": "testuser",
         "Password": "mypwd"
-    }
+    },
+    "Serilog": {
+        "MinimumLevel": {
+            "Default": "Warning"
+        } 
+    } 
 }

@@ -24,7 +24,7 @@ public class FtpTriggerFunction
     public async Task RunAsync(
         [FtpTrigger("FtpConnection", Folder = "inbox", PollingInterval = "3s", IncludeContent = false)] FtpFile ftpItem)
     {
-        _logger.LogWarning($"RunAsync >> {ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");
+        _logger.LogInformation($"RunAsync >> {ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");
 
         var client = _ftpClientFactory.CreateClient("1");
         await client.DeleteFileAsync(ftpItem.FullName);
