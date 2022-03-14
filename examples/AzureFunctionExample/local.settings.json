@@ -10,9 +10,12 @@
         "Username": "testuser",
         "Password": "mypwd"
     },
+    "FtpClientOptionsAnonymous": {
+        "Host": "localhost"
+    },
     "Serilog": {
         "MinimumLevel": {
             "Default": "Warning"
-        } 
-    } 
+        }
+    }
 }

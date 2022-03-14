@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,16 @@ public class FtpTriggerFunction
     {
         _logger.LogInformation($"RunAsync >> {ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");
 
-        var client = _ftpClientFactory.CreateClient("1");
+        var clientAnonymous = _ftpClientFactory.CreateClient("Anonymous", true);
+        //await clientAnonymous.ConnectAsync();
+
+        var stream = await clientAnonymous.OpenReadAsync(ftpItem.FullName);
+        await using var mem = new MemoryStream();
+        await stream.CopyToAsync(mem);
+        var bytes = mem.ToArray();
+        _logger.LogInformation($"clientAnonymous >> bytes={bytes.Length}");
+
+        var client = _ftpClientFactory.CreateClient();
         await client.DeleteFileAsync(ftpItem.FullName);
     }
 }

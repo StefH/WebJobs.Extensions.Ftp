@@ -10,13 +10,15 @@ public interface IFtpClientFactory
     /// <summary>
     /// Create Ftp Client.
     /// </summary>
+    /// <param name="connect">Automatically connect</param>
     /// <returns>Returns IFtpClient instance</returns>
-    public IFtpClient CreateClient();
+    public IFtpClient CreateClient(bool connect = false);
 
     /// <summary>
     /// Create Ftp Client from connection string
     /// </summary>
     /// <param name="name">name</param>
+    /// <param name="connect">Automatically connect</param>
     /// <returns>Returns IFtpClient instance</returns>
-    public IFtpClient CreateClient(string name);
+    public IFtpClient CreateClient(string name, bool connect = false);
 }

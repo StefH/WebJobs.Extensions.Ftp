@@ -18,19 +18,29 @@ internal class FtpClientFactory : IFtpClientFactory
     }
 
     /// <inheritdoc />
-    public IFtpClient CreateClient()
+    public IFtpClient CreateClient(bool connect = false)
     {
-        return CreateClient(Constants.DefaultFtpClientName);
+        return CreateClient(Constants.DefaultFtpClientName, connect);
     }
 
     /// <inheritdoc />
-    public IFtpClient CreateClient(string name)
+    public IFtpClient CreateClient(string name, bool connect = false)
     {
         if (string.IsNullOrEmpty(name))
         {
             throw new ArgumentException("Argument is null or empty", nameof(name));
         }
 
-        return _instances.GetOrAdd(name, _ => FtpClientHelper.CreateFtpClient(_options.Create(name)));
+        return _instances.GetOrAdd(name, _ =>
+        {
+            var client = FtpClientHelper.CreateFtpClient(_options.Create(name));
+
+            if (connect)
+            {
+                client.Connect();
+            }
+
+            return client;
+        });
     }
 }
