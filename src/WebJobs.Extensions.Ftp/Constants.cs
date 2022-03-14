@@ -11,4 +11,6 @@ internal static class Constants
     public static Type[] SingleTypes = { typeof(FtpFile), typeof(FtpStream) };
 
     public static Type[] BatchTypes = { typeof(FtpFile[]), typeof(FtpStream[]) };
+
+    public static string DefaultFtpClientName = "default";
 }

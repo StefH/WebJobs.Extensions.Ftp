@@ -1,5 +1,4 @@
 using FluentFTP;
-using Stef.Validation;
 
 namespace WebJobs.Extensions.Ftp.Bindings;
 
@@ -25,7 +24,7 @@ internal class FtpBindingContext
     /// <param name="client">FtpClient</param>
     public FtpBindingContext(FtpAttribute ftpAttribute, IFtpClient client)
     {
-        FtpAttribute = Guard.NotNull(ftpAttribute);
-        Client = Guard.NotNull(client);
+        FtpAttribute = ftpAttribute;
+        Client = client;
     }
 }

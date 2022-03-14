@@ -4,5 +4,10 @@
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet",
         "FtpConnection": "ftp://testuser:mypwd@localhost"
+    },
+    "FtpClientOptions": {
+        "Host": "localhost",
+        "Username": "testuser",
+        "Password": "mypwd"
     }
 }

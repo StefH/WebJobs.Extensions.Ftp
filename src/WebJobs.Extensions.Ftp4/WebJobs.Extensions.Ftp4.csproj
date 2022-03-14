@@ -26,6 +26,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.23" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -34,7 +35,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Stef.Validation" Version="0.1.0" />
+        <!--<PackageReference Include="Stef.Validation.Options" Version="0.1.0" />-->
         <PackageReference Include="TinyMapper" Version="3.0.3" />
     </ItemGroup>
 

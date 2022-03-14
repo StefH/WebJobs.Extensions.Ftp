@@ -2,7 +2,6 @@ using System.Collections.Concurrent;
 using FluentFTP;
 using Microsoft.Azure.WebJobs.Host.Config;
 using Microsoft.Extensions.Logging;
-using Stef.Validation;
 using WebJobs.Extensions.Ftp.Bindings;
 using WebJobs.Extensions.Ftp.Factories;
 using WebJobs.Extensions.Ftp.Models;
@@ -18,19 +17,13 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Ftp Service Factory, used to create context.
-    /// </summary>
-    private readonly IFtpClientFactory _clientFactory;
-
-    /// <summary>
     /// A ConcurrentDictionary to cache the clients. The IFtpClients are cached based on the connection string.
     /// </summary>
     private readonly ConcurrentDictionary<string, IFtpClient> _clientCache = new();
 
-    public FtpExtensionConfigProvider(ILogger<FtpExtensionConfigProvider> logger, IFtpClientFactory clientFactory)
+    public FtpExtensionConfigProvider(ILogger<FtpExtensionConfigProvider> logger)
     {
-        _logger = Guard.NotNull(logger);
-        _clientFactory = Guard.NotNull(clientFactory);
+        _logger = logger;
     }
 
     /// <summary>
@@ -39,8 +32,6 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
     /// <param name="context">Extension config context</param>
     public void Initialize(ExtensionConfigContext context)
     {
-        Guard.NotNull(context);
-
         // Add trigger first
         var triggerRule = context.AddBindingRule<FtpTriggerAttribute>();
         triggerRule.BindToTrigger(new FtpTriggerBindingProvider(_logger, this));
@@ -64,7 +55,7 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
     {
         var connectionString = attribute.GetConnectionString();
 
-        return new FtpTriggerContext(attribute, _clientFactory.CreateFtpClient(connectionString));
+        return new FtpTriggerContext(attribute, FtpClientHelper.CreateFtpClient(connectionString));
     }
 
     /// <summary>
@@ -76,6 +67,6 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
     {
         var connectionString = attribute.GetConnectionString();
 
-        return new FtpBindingContext(attribute, _clientCache.GetOrAdd(connectionString, c => _clientFactory.CreateFtpClient(c)));
+        return new FtpBindingContext(attribute, _clientCache.GetOrAdd(connectionString, FtpClientHelper.CreateFtpClient));
     }
 }

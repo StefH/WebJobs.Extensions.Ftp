@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using WebJobs.Extensions.Ftp.Extensions;
-using WebJobs.Extensions.Ftp.Models.Internal;
+using WebJobs.Extensions.Ftp.Options;
 
 namespace WebJobs.Extensions.Ftp.Utils;
 
@@ -36,7 +36,7 @@ internal static class FtpUrlParser
     /// </summary>
     /// <param name="connectionString">Connection string</param>
     /// <returns>Returns the ConnectionParams instance with parsed values</returns>
-    public static FtpConnectionParameters Parse(string connectionString)
+    public static FtpClientOptions Parse(string connectionString)
     {
         var match = Regex.Match(connectionString, Pattern);
         if (!match.Success)
@@ -44,7 +44,7 @@ internal static class FtpUrlParser
             throw new ArgumentException($"The ConnectionString '{connectionString}' cannot be parsed to a valid FTP connection string.", nameof(connectionString));
         }
 
-        return new FtpConnectionParameters
+        return new FtpClientOptions
         {
             Host = match.Groups["host"].Value,
             Port = int.TryParse(match.Groups["port"].Value, out var port) ? port : DefaultPort,

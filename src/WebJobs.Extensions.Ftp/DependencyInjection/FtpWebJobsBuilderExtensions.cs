@@ -1,6 +1,5 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
-using Stef.Validation;
 using WebJobs.Extensions.Ftp.Factories;
 
 namespace WebJobs.Extensions.Ftp.DependencyInjection;
@@ -18,12 +17,9 @@ public static class FtpWebJobsBuilderExtensions
     /// <exception>Throws ArgumentNullException if builder is null</exception>
     public static IWebJobsBuilder AddFtp(this IWebJobsBuilder builder)
     {
-        Guard.NotNull(builder);
-
         builder.AddExtension<FtpExtensionConfigProvider>();
 
         builder.Services.AddSingleton<IFtpClientFactory, FtpClientFactory>();
-
         builder.Services.AddLogging();
 
         return builder;
