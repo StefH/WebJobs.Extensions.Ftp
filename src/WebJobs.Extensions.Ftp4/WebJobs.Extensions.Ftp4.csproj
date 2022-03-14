@@ -20,8 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentFTP" Version="37.0.1" />
-        <PackageReference Include="IDisposableAnalyzers" Version="4.0.1">
+        <PackageReference Include="FluentFTP" Version="37.0.2" />
+        <PackageReference Include="IDisposableAnalyzers" Version="4.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
