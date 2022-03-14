@@ -13,6 +13,9 @@
     "FtpClientOptionsAnonymous": {
         "Host": "localhost"
     },
+    "ConnectionStrings": {
+        "Ftp2": "ftp://testuser:mypwd@localhost"
+    },
     "Serilog": {
         "MinimumLevel": {
             "Default": "Warning"

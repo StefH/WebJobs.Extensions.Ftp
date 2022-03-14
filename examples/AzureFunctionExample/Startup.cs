@@ -27,6 +27,7 @@ public class Startup : FunctionsStartup
             .CreateLogger();
         builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(logger));
 
+        builder.Services.AddFtpClient("Ftp2", config.GetConnectionString("Ftp2"));
         builder.Services.AddFtpClient(config.GetSection("FtpClientOptions"));
         builder.Services.AddFtpClient("Anonymous", config.GetSection("FtpClientOptionsAnonymous"));
     }

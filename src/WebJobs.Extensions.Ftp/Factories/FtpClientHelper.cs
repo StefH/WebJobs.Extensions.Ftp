@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Xml.Linq;
 using FluentFTP;
 using WebJobs.Extensions.Ftp.Options;
 using WebJobs.Extensions.Ftp.Utils;
