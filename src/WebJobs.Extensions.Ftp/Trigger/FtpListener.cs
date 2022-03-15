@@ -246,11 +246,9 @@ internal sealed class FtpListener : IListener
     {
         return Task.Run(async () =>
         {
-            if (_context.FtpTriggerAttribute.RunOnStartup)
-            {
-                _lastRunningTime = DateTime.UtcNow;
-            }
-            else
+            _lastRunningTime = DateTime.UtcNow;
+
+            if (!_context.FtpTriggerAttribute.RunOnStartup)
             {
                 await Task.Delay(_pollingInterval, token);
             }
