@@ -8,5 +8,4 @@ internal static class RegExExtensions
     {
         return group.Success ? group.Value : null;
     }
-
 }

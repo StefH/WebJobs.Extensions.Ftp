@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using FluentFTP;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Stef.Validation;
 using WebJobs.Extensions.Ftp.Models;
 
 namespace WebJobs.Extensions.Ftp.Bindings;
@@ -24,8 +23,8 @@ internal class FtpAsyncCollector<T> : IAsyncCollector<T>
 
     public FtpAsyncCollector(ILogger logger, FtpBindingContext context)
     {
-        _logger = Guard.NotNull(logger);
-        _context = Guard.NotNull(context);
+        _logger = logger;
+        _context = context;
     }
 
     /// <summary>

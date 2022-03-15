@@ -8,7 +8,6 @@ using FluentFTP;
 using Microsoft.Azure.WebJobs.Host.Executors;
 using Microsoft.Azure.WebJobs.Host.Listeners;
 using Microsoft.Extensions.Logging;
-using Stef.Validation;
 using WebJobs.Extensions.Ftp.Extensions;
 using WebJobs.Extensions.Ftp.Models;
 using WebJobs.Extensions.Ftp.Utils;
@@ -31,10 +30,10 @@ internal sealed class FtpListener : IListener
 
     public FtpListener(ILogger logger, Type triggerValueType, ITriggeredFunctionExecutor executor, FtpTriggerContext context)
     {
-        _logger = Guard.NotNull(logger);
-        _triggerValueType = Guard.NotNull(triggerValueType);
-        _executor = Guard.NotNull(executor);
-        _context = Guard.NotNull(context);
+        _logger = logger;
+        _triggerValueType = triggerValueType;
+        _executor = executor;
+        _context = context;
     }
 
     public void Cancel()

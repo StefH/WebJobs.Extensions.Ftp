@@ -1,5 +1,4 @@
 using FluentFTP;
-using Stef.Validation;
 
 namespace WebJobs.Extensions.Ftp.Trigger;
 
@@ -25,7 +24,7 @@ internal class FtpTriggerContext
     /// <param name="client">FtpClient instance</param>
     public FtpTriggerContext(FtpTriggerAttribute attribute, IFtpClient client)
     {
-        FtpTriggerAttribute = Guard.NotNull(attribute);
-        Client = Guard.NotNull(client);
+        FtpTriggerAttribute = attribute;
+        Client = client;
     }
 }

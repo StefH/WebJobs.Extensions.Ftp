@@ -1,6 +1,5 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Hosting;
-using Stef.Validation;
 using WebJobs.Extensions.Ftp.DependencyInjection;
 
 [assembly: WebJobsStartup(typeof(FtpBinding.Startup))]
@@ -18,8 +17,6 @@ public class FtpBinding
     {
         public void Configure(IWebJobsBuilder builder)
         {
-            Guard.NotNull(builder);
-
             builder.AddFtp();
         }
     }

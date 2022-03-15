@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{6486DF70-1779-48
 		_\custom-extension-part2.md = _\custom-extension-part2.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunctionExample", "examples\AzureFunctionExample\AzureFunctionExample.csproj", "{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{DC826E1F-54DD-433E-896F-35F75EDE1B86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC826E1F-54DD-433E-896F-35F75EDE1B86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC826E1F-54DD-433E-896F-35F75EDE1B86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{CB53BC0E-9A72-4208-B1D0-75D6C60DAED3} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 		{DC826E1F-54DD-433E-896F-35F75EDE1B86} = {4A925250-CB80-4530-A60F-3F28037F13FD}
 		{6486DF70-1779-4853-B97F-12F5DE40F982} = {A0801AC7-D3C2-40B4-9A86-D40E2D032F11}
+		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8ED04F5F-E0ED-4242-9DC7-CC6D6EF14892}

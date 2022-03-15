@@ -1,6 +1,5 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Stef.Validation;
 
 namespace WebJobs.Extensions.Ftp.Bindings;
 
@@ -15,8 +14,8 @@ internal class FtpBindingConverterForIAsyncCollector<T> : IConverter<FtpAttribut
 
     public FtpBindingConverterForIAsyncCollector(ILogger logger, FtpExtensionConfigProvider provider)
     {
-        _logger = Guard.NotNull(logger);
-        _provider = Guard.NotNull(provider);
+        _logger = logger;
+        _provider = provider;
     }
 
     /// <summary>

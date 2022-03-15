@@ -1,6 +1,5 @@
-﻿using FluentFTP;
+using FluentFTP;
 using Microsoft.Azure.WebJobs;
-using Stef.Validation;
 
 namespace WebJobs.Extensions.Ftp.Bindings;
 
@@ -10,7 +9,7 @@ internal class FtpBindingConverterForIFtpClient : IConverter<FtpAttribute, IFtpC
 
     public FtpBindingConverterForIFtpClient(FtpExtensionConfigProvider provider)
     {
-        _provider = Guard.NotNull(provider);
+        _provider = provider;
     }
 
     public IFtpClient Convert(FtpAttribute input)

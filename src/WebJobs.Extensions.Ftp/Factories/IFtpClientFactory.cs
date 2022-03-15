@@ -3,14 +3,22 @@ using FluentFTP;
 namespace WebJobs.Extensions.Ftp.Factories;
 
 /// <summary>
-/// Ftp Service factory. Create IFtpClient.
+/// Ftp Client factory to create IFtpClient.
 /// </summary>
-internal interface IFtpClientFactory
+public interface IFtpClientFactory
 {
+    /// <summary>
+    /// Create Ftp Client.
+    /// </summary>
+    /// <param name="connect">Automatically connect</param>
+    /// <returns>Returns IFtpClient instance</returns>
+    public IFtpClient CreateClient(bool connect = false);
+
     /// <summary>
     /// Create Ftp Client from connection string
     /// </summary>
-    /// <param name="connectionString">Ftp Connection string</param>
-    /// <returns>Returns FtpClient instance</returns>
-    public IFtpClient CreateFtpClient(string connectionString);
+    /// <param name="name">name</param>
+    /// <param name="connect">Automatically connect</param>
+    /// <returns>Returns IFtpClient instance</returns>
+    public IFtpClient CreateClient(string name, bool connect = false);
 }
