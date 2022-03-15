@@ -1,3 +1,6 @@
+# 4.0.3 (15 March 2022)
+- [#3](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/3) - Update dependency injection for FtpClientFactory contributed by [StefH](https://github.com/StefH)
+
 # 4.0.1 (03 March 2022)
 - [#2](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/2) - Change PollingInterval to a string value + add code to handle errors [enhancement] contributed by [StefH](https://github.com/StefH)
 

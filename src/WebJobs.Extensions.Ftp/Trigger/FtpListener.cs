@@ -252,7 +252,7 @@ internal sealed class FtpListener : IListener
             }
             else
             {
-                await Task.Delay(TimeSpan.FromSeconds(_pollingInterval.Seconds), token);
+                await Task.Delay(_pollingInterval, token);
             }
 
             while (!token.IsCancellationRequested)
@@ -261,7 +261,7 @@ internal sealed class FtpListener : IListener
 
                 _lastRunningTime = DateTime.UtcNow;
 
-                await Task.Delay(TimeSpan.FromSeconds(_pollingInterval.Seconds), token);
+                await Task.Delay(_pollingInterval, token);
             }
         }, token);
     }

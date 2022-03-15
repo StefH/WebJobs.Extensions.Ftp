@@ -1,4 +1,4 @@
-# 4.0.1 (03 March 2022)
-- #2 Change PollingInterval to a string value + add code to handle errors [enhancement]
+# 4.0.3 (15 March 2022)
+- #3 Update dependency injection for FtpClientFactory
 
 The full release notes can be found here: https://github.com/StefH/WebJobs.Extensions.Ftp/blob/main/ReleaseNotes.md
