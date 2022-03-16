@@ -28,6 +28,8 @@ internal sealed class FtpListener : IListener
     private DateTime _lastRunningTime;
     private TimeSpan _pollingInterval;
 
+    private bool _firstRun = true;
+
     public FtpListener(ILogger logger, Type triggerValueType, ITriggeredFunctionExecutor executor, FtpTriggerContext context)
     {
         _logger = logger;
@@ -79,7 +81,8 @@ internal sealed class FtpListener : IListener
 
         var filteredListItems = listItems
             .Where(li => li.Type == FtpFileSystemObjectType.File)
-            .Where(li => li.RawModified > _lastRunningTime)
+            .Where(li => li.Modified >= _lastRunningTime ||
+                         _context.FtpTriggerAttribute.RunOnStartup && _context.FtpTriggerAttribute.ForceTriggerOnFirstRun && _firstRun)
             .OrderBy(li => li.RawModified)
             .ToArray();
 
@@ -266,6 +269,7 @@ internal sealed class FtpListener : IListener
             {
                 await action(token);
 
+                _firstRun = false;
                 _lastRunningTime = DateTime.UtcNow;
 
                 await Task.Delay(_pollingInterval, token);
