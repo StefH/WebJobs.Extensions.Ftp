@@ -55,8 +55,14 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     /// </summary>
     public bool IncludeContent { get; set; } = true;
 
+    /// <summary>
+    /// Load the modify date using MDTM when it could not be parsed from the server listing.
+    /// This only pertains to servers that do not implement the MLSD command.
+    /// </summary>
+    public bool LoadModifyDateUsingMDTM { get; set; } = true;
+
     public FtpTriggerAttribute()
-    {}
+    { }
 
     public FtpTriggerAttribute(string connection) : base(connection)
     {
