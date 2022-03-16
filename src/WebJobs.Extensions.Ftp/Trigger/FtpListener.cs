@@ -83,7 +83,7 @@ internal sealed class FtpListener : IListener
             .Where(li => li.Type == FtpFileSystemObjectType.File)
             .Where(li => li.Modified >= _lastRunningTime ||
                          _context.FtpTriggerAttribute.RunOnStartup && _context.FtpTriggerAttribute.ForceTriggerOnFirstRun && _firstRun)
-            .OrderBy(li => li.RawModified)
+            .OrderBy(li => li.Modified)
             .ToArray();
 
         if (Constants.SingleTypes.Contains(_triggerValueType))
