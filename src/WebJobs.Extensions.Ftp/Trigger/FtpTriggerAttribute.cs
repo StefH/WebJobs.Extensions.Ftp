@@ -61,8 +61,14 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     /// </summary>
     public bool LoadModifyDateUsingMDTM { get; set; } = true;
 
+    /// <summary>
+    /// Force a trigger when it runs for the first time, ignoring the modify date.
+    /// </summary>
+    public bool ForceTriggerOnFirstRun { get; set; } = false;
+
     public FtpTriggerAttribute()
-    { }
+    {
+    }
 
     public FtpTriggerAttribute(string connection) : base(connection)
     {
