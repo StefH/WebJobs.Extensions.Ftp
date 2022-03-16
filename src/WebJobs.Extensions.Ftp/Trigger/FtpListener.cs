@@ -231,7 +231,16 @@ internal sealed class FtpListener : IListener
     {
         try
         {
-            var listOption = _context.FtpTriggerAttribute.Recursive ? FtpListOption.Recursive : FtpListOption.Auto;
+            var listOption = FtpListOption.Auto;
+            if (_context.FtpTriggerAttribute.LoadModifyDateUsingMDTM)
+            {
+                listOption |= FtpListOption.Modify;
+            }
+
+            if (_context.FtpTriggerAttribute.Recursive)
+            {
+                listOption |= FtpListOption.Recursive;
+            }
 
             return await _context.Client.GetListingAsync(_context.FtpTriggerAttribute.Folder, listOption, cancellationToken);
         }

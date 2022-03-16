@@ -24,7 +24,7 @@ public class FtpTriggerFunction
 
     [FunctionName(FunctionName)]
     public async Task RunAsync(
-        [FtpTrigger("FtpConnection", Folder = "inbox", PollingInterval = "3s", IncludeContent = false)] FtpFile ftpItem)
+        [FtpTrigger("FtpConnection", Folder = "inbox", PollingInterval = "30s", IncludeContent = false)] FtpFile ftpItem)
     {
         _logger.LogInformation($"RunAsync >> {ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");
 
