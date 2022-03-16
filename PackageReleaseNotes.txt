@@ -1,4 +1,4 @@
-# 4.0.4 (16 March 2022)
-- #4 Fix RunOnStartup [bug]
+# 4.0.5 (16 March 2022)
+- #5 Load ModifyDate using MDTM [enhancement]
 
 The full release notes can be found here: https://github.com/StefH/WebJobs.Extensions.Ftp/blob/main/ReleaseNotes.md

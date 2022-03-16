@@ -1,3 +1,6 @@
+# 4.0.5 (16 March 2022)
+- [#5](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/5) - Load ModifyDate using MDTM [enhancement] contributed by [StefH](https://github.com/StefH)
+
 # 4.0.4 (16 March 2022)
 - [#4](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/4) - Fix RunOnStartup [bug] contributed by [StefH](https://github.com/StefH)
 
