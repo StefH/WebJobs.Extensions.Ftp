@@ -25,8 +25,8 @@ internal sealed class FtpListener : IListener
     private readonly ITriggeredFunctionExecutor _executor;
     private readonly FtpTriggerContext _context;
 
-    private DateTime _lastRunningTime = DateTime.MaxValue;
-    private TimeSpan _pollingInterval = TimeSpan.MaxValue;
+    private DateTime _lastRunningTime;
+    private TimeSpan _pollingInterval;
 
     public FtpListener(ILogger logger, Type triggerValueType, ITriggeredFunctionExecutor executor, FtpTriggerContext context)
     {
