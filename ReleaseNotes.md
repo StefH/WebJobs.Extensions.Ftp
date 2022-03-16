@@ -1,3 +1,6 @@
+# 4.0.4 (16 March 2022)
+- [#4](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/4) - Fix RunOnStartup [bug] contributed by [StefH](https://github.com/StefH)
+
 # 4.0.3 (15 March 2022)
 - [#3](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/3) - Update dependency injection for FtpClientFactory contributed by [StefH](https://github.com/StefH)
 

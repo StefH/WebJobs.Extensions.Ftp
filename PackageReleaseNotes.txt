@@ -1,4 +1,4 @@
-# 4.0.3 (15 March 2022)
-- #3 Update dependency injection for FtpClientFactory
+# 4.0.4 (16 March 2022)
+- #4 Fix RunOnStartup [bug]
 
 The full release notes can be found here: https://github.com/StefH/WebJobs.Extensions.Ftp/blob/main/ReleaseNotes.md
