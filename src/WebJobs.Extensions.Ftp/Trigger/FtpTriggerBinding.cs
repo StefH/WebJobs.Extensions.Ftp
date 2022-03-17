@@ -70,11 +70,11 @@ internal class FtpTriggerBinding : ITriggerBinding
     {
         return new TriggerParameterDescriptor
         {
-            Name = "Ftp",
+            Name = "FTP",
             DisplayHints = new ParameterDisplayHints
             {
-                Prompt = "Ftp",
-                Description = "Ftp trigger"
+                Prompt = "FTP",
+                Description = "FTP trigger"
             }
         };
     }

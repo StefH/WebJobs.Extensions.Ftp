@@ -55,7 +55,7 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
     {
         var connectionString = attribute.GetConnectionString();
 
-        return new FtpTriggerContext(attribute, FtpClientHelper.CreateFtpClient(connectionString));
+        return new FtpTriggerContext(attribute, FtpClientHelper.CreateFtpClient(connectionString, attribute.AutoConnectFtpClient));
     }
 
     /// <summary>
@@ -67,6 +67,6 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
     {
         var connectionString = attribute.GetConnectionString();
 
-        return new FtpBindingContext(attribute, _clientCache.GetOrAdd(connectionString, FtpClientHelper.CreateFtpClient));
+        return new FtpBindingContext(attribute, _clientCache.GetOrAdd(connectionString, cs => FtpClientHelper.CreateFtpClient(cs, attribute.AutoConnectFtpClient)));
     }
 }
