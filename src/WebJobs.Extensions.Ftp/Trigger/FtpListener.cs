@@ -61,7 +61,7 @@ internal sealed class FtpListener : IListener
         {
             await _context.Client.ConnectAsync(cancellationToken);
 
-            await RunRecurringTaskAsync(GetListingAndGetFilesAsync, cancellationToken);
+            RunRecurringTaskAsync(GetListingAndGetFilesAsync, cancellationToken);
         }
         catch (FtpAuthenticationException ftpEx)
         {
@@ -254,9 +254,10 @@ internal sealed class FtpListener : IListener
         }
     }
 
-    private Task RunRecurringTaskAsync(Func<CancellationToken, Task> action, CancellationToken token)
+    private void RunRecurringTaskAsync(Func<CancellationToken, Task> action, CancellationToken token)
     {
-        return Task.Run(async () =>
+        // This needs to run in a Task which is not awaited, else it will block other Functions.
+        Task.Run(async () =>
         {
             _lastRunningTime = DateTime.UtcNow;
 

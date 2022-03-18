@@ -13,18 +13,18 @@ public static class FtpTriggerSample
 {
     [FunctionName("FtpTriggerFtpFile")]
     public static void RunFtpTriggerFtpFile(
-        [FtpTrigger("FtpConnectionAnonymous", Folder = "inbox", PollingInterval = "10s")] FtpFile ftpItem,
+        [FtpTrigger("FtpConnectionAnonymous", Folder = "inbox", PollingInterval = "10s")] FtpFile ftpFile,
         ILogger log)
     {
-        log.LogInformation($"RunFtpTriggerFtpFile >> {ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size} {ftpItem.Content?.Length}");
+        log.LogInformation($"RunFtpTriggerFtpFile >> {ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size} {ftpFile.Content?.Length}");
     }
 
     [FunctionName("FtpTriggerFtpFiles")]
     public static void RunFtpTriggerFtpFiles(
-        [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingInterval = "10s")] FtpFile[] ftpItem,
+        [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingInterval = "10s")] FtpFile[] ftpFile,
         ILogger log)
     {
-        log.LogWarning($"RunFtpTriggerFtpFiles >> {ftpItem.GetType()} {ftpItem.Length}");
+        log.LogWarning($"RunFtpTriggerFtpFiles >> {ftpFile.GetType()} {ftpFile.Length}");
     }
 
     [FunctionName("FtpTriggerFtpStream")]
@@ -48,20 +48,25 @@ public static class FtpTriggerSample
 
     [FunctionName("FtpTriggerSampleWithClient")]
     public static void RunFtpTriggerSampleWithClient(
-        [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingInterval = "30s", IncludeContent = false)] FtpFile ftpItem,
+        [FtpTrigger(Connection = "FtpConnection", Folder = "inbox", PollingInterval = "60s", IncludeContent = false)] FtpFile ftpFile,
         [Ftp(Connection = "FtpConnection", Folder = "inbox")] IFtpClient client,
         ILogger log)
     {
-        // Do some processing with the FtpFile ...
+        // Do some processing with the FtpFile and client
 
-        client.DeleteFile(ftpItem.FullName);
+        if (!client.IsConnected)
+        {
+            client.Connect();
+        }
+
+        client.DeleteFile(ftpFile.FullName);
     }
 
     [FunctionName("FtpTriggerSampleFastNoFolder")]
     public static void RunFastNoFolder(
-        [FtpTrigger(Connection = "FtpConnection", PollingInterval = "10s")] FtpFile ftpItem,
+        [FtpTrigger(Connection = "FtpConnection", PollingInterval = "10s")] FtpFile ftpFile,
         ILogger log)
     {
-        log.LogInformation($"{ftpItem.GetType()} {ftpItem.Name} {ftpItem.FullName} {ftpItem.Size}  {ftpItem.Content?.Length}");
+        log.LogInformation($"{ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size}  {ftpFile.Content?.Length}");
     }
 }

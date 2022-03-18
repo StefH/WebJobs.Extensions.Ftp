@@ -30,7 +30,7 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     /// - 10s poll every 10 seconds
     /// - 2m  poll every 2 minutes
     ///
-    /// Default value is <c>1 minute</c>. 
+    /// Default value is <c>1m</c>. 
     /// </summary>
     public string? PollingInterval { get; set; }
 
@@ -58,13 +58,17 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     /// <summary>
     /// Load the modify date using MDTM when it could not be parsed from the server listing.
     /// This only pertains to servers that do not implement the MLSD command.
+    ///
+    /// Default value is <c>true</c>.
     /// </summary>
     public bool LoadModifyDateUsingMDTM { get; set; } = true;
 
     /// <summary>
     /// Force a trigger when it runs for the first time, ignoring the modify date.
+    ///
+    /// Default value is <c>false</c>.
     /// </summary>
-    public bool ForceTriggerOnFirstRun { get; set; } = false;
+    public bool ForceTriggerOnFirstRun { get; set; }
 
     public FtpTriggerAttribute()
     {

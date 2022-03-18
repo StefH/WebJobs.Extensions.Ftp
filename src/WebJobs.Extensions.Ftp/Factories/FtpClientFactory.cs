@@ -31,16 +31,6 @@ internal class FtpClientFactory : IFtpClientFactory
             throw new ArgumentException("Argument is null or empty", nameof(name));
         }
 
-        return _instances.GetOrAdd(name, _ =>
-        {
-            var client = FtpClientHelper.CreateFtpClient(_options.Create(name));
-
-            if (connect)
-            {
-                client.Connect();
-            }
-
-            return client;
-        });
+        return _instances.GetOrAdd(name, _ => FtpClientHelper.CreateFtpClient(_options.Create(name), connect));
     }
 }
