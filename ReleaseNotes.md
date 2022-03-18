@@ -1,3 +1,9 @@
+# 4.0.7 (18 March 2022)
+- [#7](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/7) - Add option to AutoConnectFtpClient + Fix issue with Task.Run [bug] contributed by [StefH](https://github.com/StefH)
+
+# 4.0.6 (16 March 2022)
+- [#6](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/6) - ForceTriggerOnFirstRun [enhancement] contributed by [StefH](https://github.com/StefH)
+
 # 4.0.5 (16 March 2022)
 - [#5](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/5) - Load ModifyDate using MDTM [enhancement] contributed by [StefH](https://github.com/StefH)
 

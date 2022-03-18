@@ -1,4 +1,4 @@
-# 4.0.5 (16 March 2022)
-- #5 Load ModifyDate using MDTM [enhancement]
+# 4.0.7 (18 March 2022)
+- #7 Add option to AutoConnectFtpClient + Fix issue with Task.Run [bug]
 
 The full release notes can be found here: https://github.com/StefH/WebJobs.Extensions.Ftp/blob/main/ReleaseNotes.md
