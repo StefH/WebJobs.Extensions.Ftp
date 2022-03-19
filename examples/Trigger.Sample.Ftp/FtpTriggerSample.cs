@@ -2,6 +2,7 @@ using FluentFTP;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using WebJobs.Extensions.Ftp.Bindings;
+using WebJobs.Extensions.Ftp.Enums;
 using WebJobs.Extensions.Ftp.Models;
 using WebJobs.Extensions.Ftp.Trigger;
 
@@ -12,13 +13,13 @@ public static class FtpTriggerSample
     private const string FtpConnection = "FtpConnection";
     private const string Folder = "inbox";
 
-    //[FunctionName("FtpTriggerFtpFile")]
-    //public static void RunFtpTriggerFtpFile(
-    //    [FtpTrigger("FtpConnectionAnonymous", Folder = "inbox", PollingInterval = "10s")] FtpFile ftpFile,
-    //    ILogger log)
-    //{
-    //    log.LogInformation($"RunFtpTriggerFtpFile >> {ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size} {ftpFile.Content?.Length}");
-    //}
+    [FunctionName("RunFtpTriggerFtpFileAlways")]
+    public static void RunFtpTriggerFtpFileAlways(
+        [FtpTrigger("FtpConnectionAnonymous", Folder = "inbox", PollingInterval = "30s", TriggerMode = TriggerMode.Always)] FtpFile ftpFile,
+        ILogger log)
+    {
+        log.LogInformation($"RunFtpTriggerFtpFileAlways >> {ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size} {ftpFile.Content?.Length}");
+    }
 
     //[FunctionName("FtpTriggerFtpFiles")]
     //public static void RunFtpTriggerFtpFiles(
@@ -49,11 +50,10 @@ public static class FtpTriggerSample
 
     [FunctionName("FtpTriggerSampleWithClient")]
     public static void RunFtpTriggerSampleWithClient(
-        [FtpTrigger(Connection = FtpConnection, Folder = Folder, PollingInterval = "30s", IncludeContent = false, ForceTriggerOnFirstRun = true)] FtpFile ftpFile,
+        [FtpTrigger(Connection = FtpConnection, Folder = Folder, PollingInterval = "30s", IncludeContent = false, TriggerOnFirstRun = true)] FtpFile ftpFile,
         [Ftp(Connection = FtpConnection, Folder = Folder, CacheFtpClient = false)] IFtpClient client,
         ILogger log)
     {
-
         log.LogInformation($"FtpTriggerSampleWithClient >> {ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size} {ftpFile.Content?.Length}");
 
         // Do some processing with the FtpFile and client

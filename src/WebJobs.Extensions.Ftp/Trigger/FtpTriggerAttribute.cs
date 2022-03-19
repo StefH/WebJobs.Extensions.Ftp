@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Azure.WebJobs.Description;
+using WebJobs.Extensions.Ftp.Enums;
 
 namespace WebJobs.Extensions.Ftp.Trigger;
 
@@ -61,7 +62,14 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool ForceTriggerOnFirstRun { get; set; }
+    public bool TriggerOnFirstRun { get; set; }
+
+    /// <summary>
+    /// The trigger mode to use.
+    ///
+    /// Default value is <c>ModifyDate</c>.
+    /// </summary>
+    public TriggerMode TriggerMode { get; set; } = TriggerMode.ModifyDate;
 
     public FtpTriggerAttribute()
     {

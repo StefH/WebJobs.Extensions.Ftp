@@ -8,6 +8,7 @@ using FluentFTP;
 using Microsoft.Azure.WebJobs.Host.Executors;
 using Microsoft.Azure.WebJobs.Host.Listeners;
 using Microsoft.Extensions.Logging;
+using WebJobs.Extensions.Ftp.Enums;
 using WebJobs.Extensions.Ftp.Extensions;
 using WebJobs.Extensions.Ftp.Models;
 using WebJobs.Extensions.Ftp.Utils;
@@ -81,8 +82,9 @@ internal sealed class FtpListener : IListener
 
         var filteredListItems = listItems
             .Where(li => li.Type == FtpFileSystemObjectType.File)
-            .Where(li => li.Modified >= _lastRunningTime ||
-                         _context.FtpTriggerAttribute.ForceTriggerOnFirstRun && _firstRun)
+            .Where(li => _context.FtpTriggerAttribute.TriggerMode == TriggerMode.ModifyDate && li.Modified >= _lastRunningTime ||
+                         _context.FtpTriggerAttribute.TriggerMode == TriggerMode.Always ||
+                         _context.FtpTriggerAttribute.TriggerOnFirstRun && _firstRun)
             .OrderBy(li => li.Modified)
             .ToArray();
 
