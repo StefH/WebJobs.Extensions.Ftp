@@ -49,7 +49,7 @@ internal sealed class FtpListener : IListener
     }
 
     /// <summary>
-    /// Start the listener asynchronously. Subscribe to Ftp and wait for files. When a file is added, execute the function
+    /// Start the listener asynchronously. Subscribe to Ftp and wait for files. When a file is added, execute the action.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A Task returned from RecurringTask method</returns>
@@ -61,7 +61,7 @@ internal sealed class FtpListener : IListener
         {
             await _context.Client.ConnectAsync(cancellationToken);
 
-            RunRecurringTaskAsync(GetListingAndGetFilesAsync, cancellationToken);
+            RunRecurringTask(GetListingAndGetFilesAsync, cancellationToken);
         }
         catch (FtpAuthenticationException ftpEx)
         {
@@ -82,7 +82,7 @@ internal sealed class FtpListener : IListener
         var filteredListItems = listItems
             .Where(li => li.Type == FtpFileSystemObjectType.File)
             .Where(li => li.Modified >= _lastRunningTime ||
-                         _context.FtpTriggerAttribute.RunOnStartup && _context.FtpTriggerAttribute.ForceTriggerOnFirstRun && _firstRun)
+                         _context.FtpTriggerAttribute.ForceTriggerOnFirstRun && _firstRun)
             .OrderBy(li => li.Modified)
             .ToArray();
 
@@ -254,18 +254,11 @@ internal sealed class FtpListener : IListener
         }
     }
 
-    private void RunRecurringTaskAsync(Func<CancellationToken, Task> action, CancellationToken token)
+    private void RunRecurringTask(Func<CancellationToken, Task> action, CancellationToken token)
     {
         // This needs to run in a Task which is not awaited, else it will block other Functions.
         Task.Run(async () =>
         {
-            _lastRunningTime = DateTime.UtcNow;
-
-            if (!_context.FtpTriggerAttribute.RunOnStartup)
-            {
-                await Task.Delay(_pollingInterval, token);
-            }
-
             while (!token.IsCancellationRequested)
             {
                 await action(token);

@@ -35,13 +35,6 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     public string? PollingInterval { get; set; }
 
     /// <summary>
-    /// If true, polling for new files will start when the function starts.
-    ///
-    /// Default value is <c>true</c>.
-    /// </summary>
-    public bool RunOnStartup { get; set; } = true;
-
-    /// <summary>
     /// Gets files within subdirectories as well. Adds the -r option to the LIST command. Some servers may not support this feature.
     ///
     /// Default value is <c>false</c>.

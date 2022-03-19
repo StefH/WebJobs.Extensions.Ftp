@@ -3,6 +3,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <AzureFunctionsVersion>v4</AzureFunctionsVersion>
         <Nullable>enable</Nullable>
+        <!-- (1) https://github.com/serilog/serilog-settings-configuration/pull/222#issuecomment-919916935 -->
         <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
     </PropertyGroup>
 
@@ -16,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!--_https://github.com/serilog/serilog-settings-configuration/pull/222#issuecomment-919916935 -->
+        <!-- (1) -->
         <FunctionsPreservedDependencies Include="Microsoft.Extensions.DependencyModel.dll" />
     </ItemGroup>
 

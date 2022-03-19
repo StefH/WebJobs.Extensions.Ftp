@@ -6,13 +6,6 @@ public abstract class AbstractBaseFtpAttribute : Attribute
 {
     public string Connection { get; set; } = null!;
 
-    /// <summary>
-    /// Call Connect() on the bound IFtpClient
-    ///
-    /// Default value is <c>false</c>.
-    /// </summary>
-    public bool AutoConnectFtpClient { get; set; }
-
     protected AbstractBaseFtpAttribute()
     {
     }
