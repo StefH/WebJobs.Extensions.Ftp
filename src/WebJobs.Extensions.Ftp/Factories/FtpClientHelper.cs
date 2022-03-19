@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using FluentFTP;
 using WebJobs.Extensions.Ftp.Options;
-using WebJobs.Extensions.Ftp.Utils;
 
 namespace WebJobs.Extensions.Ftp.Factories;
 
@@ -17,7 +16,7 @@ internal static class FtpClientHelper
             throw new ArgumentException("Argument is null or empty", nameof(connectionString));
         }
 
-        return CreateFtpClient(FtpUrlParser.Parse(connectionString), connect);
+        return CreateFtpClient(FtpClientOptions.Parse(connectionString), connect);
     }
 
     public static IFtpClient CreateFtpClient(FtpClientOptions options, bool connect = false)

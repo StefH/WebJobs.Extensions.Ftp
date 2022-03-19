@@ -6,7 +6,6 @@ using Microsoft.Azure.WebJobs.Host.Listeners;
 using Microsoft.Azure.WebJobs.Host.Protocols;
 using Microsoft.Azure.WebJobs.Host.Triggers;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace WebJobs.Extensions.Ftp.Trigger;
 

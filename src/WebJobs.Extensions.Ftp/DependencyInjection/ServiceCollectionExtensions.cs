@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddFtpClient(this IServiceCollection services, string name, string connectionString)
     {
-        return AddFtpClient(services, name, FtpUrlParser.Parse(connectionString));
+        return AddFtpClient(services, name, FtpClientOptions.Parse(connectionString));
     }
 
     public static IServiceCollection AddFtpClient(this IServiceCollection services, IConfigurationSection section)
