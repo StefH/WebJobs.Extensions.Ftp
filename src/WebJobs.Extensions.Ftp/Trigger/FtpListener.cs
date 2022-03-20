@@ -46,7 +46,10 @@ internal sealed class FtpListener : IListener
 
     public void Dispose()
     {
-        _context.Client.Dispose();
+        if (!_context.Client.IsDisposed)
+        {
+            _context.Client.Dispose();
+        }
     }
 
     /// <summary>
@@ -84,7 +87,7 @@ internal sealed class FtpListener : IListener
             .Where(li => li.Type == FtpFileSystemObjectType.File)
             .Where(li => _context.FtpTriggerAttribute.TriggerMode == TriggerMode.ModifyDate && li.Modified >= _lastRunningTime ||
                          _context.FtpTriggerAttribute.TriggerMode == TriggerMode.Always ||
-                         _context.FtpTriggerAttribute.TriggerOnFirstRun && _firstRun)
+                         _context.FtpTriggerAttribute.TriggerOnStartup && _firstRun)
             .OrderBy(li => li.Modified)
             .ToArray();
 

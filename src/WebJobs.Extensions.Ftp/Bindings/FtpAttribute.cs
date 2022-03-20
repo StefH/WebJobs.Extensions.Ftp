@@ -26,6 +26,8 @@ public sealed class FtpAttribute : AbstractBaseFtpAttribute
     /// <summary>
     /// Cache the FtpClient based on the connection-string.
     ///
+    /// In case of <c>false</c>, the caller must the dispose FtpClient manually.
+    ///
     /// Default value is <c>true</c>.
     /// </summary>
     public bool CacheFtpClient { get; set; } = true;

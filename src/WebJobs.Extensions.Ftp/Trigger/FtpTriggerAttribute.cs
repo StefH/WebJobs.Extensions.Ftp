@@ -62,7 +62,7 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool TriggerOnFirstRun { get; set; }
+    public bool TriggerOnStartup { get; set; }
 
     /// <summary>
     /// The trigger mode to use.

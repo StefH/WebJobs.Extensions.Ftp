@@ -1,3 +1,4 @@
+using System;
 using FluentFTP;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -50,8 +51,8 @@ public static class FtpTriggerSample
 
     [FunctionName("FtpTriggerSampleWithClient")]
     public static void RunFtpTriggerSampleWithClient(
-        [FtpTrigger(Connection = FtpConnection, Folder = Folder, PollingInterval = "30s", IncludeContent = false, TriggerOnFirstRun = true)] FtpFile ftpFile,
-        [Ftp(Connection = FtpConnection, Folder = Folder, CacheFtpClient = false)] IFtpClient client,
+        [FtpTrigger(Connection = FtpConnection, Folder = Folder, PollingInterval = "30s", IncludeContent = false, TriggerOnStartup = true)] FtpFile ftpFile,
+        [Ftp(Connection = FtpConnection, Folder = Folder)] IFtpClient client,
         ILogger log)
     {
         log.LogInformation($"FtpTriggerSampleWithClient >> {ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size} {ftpFile.Content?.Length}");
@@ -64,11 +65,17 @@ public static class FtpTriggerSample
             client.Connect();
         }
 
-        client.DeleteFile(ftpFile.FullName);
+        try
+        {
+            client.DeleteFile(ftpFile.FullName);
+        }
+        catch (Exception e)
+        {
+           log.LogError(e, "DeleteFile");
+        }
 
-        client.Disconnect();
-        client.Disconnect();
-        client.Dispose();
+        //client.Disconnect();
+        //client.Dispose();
     }
 
     //[FunctionName("FtpTriggerSampleFastNoFolder")]
