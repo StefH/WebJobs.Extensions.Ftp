@@ -1,9 +1,11 @@
 {
-  "version": "2.0",
+    "version": "2.0",
     "logging": {
         "logging": {
             "logLevel": {
-                "default": "Information"
+                "default": "Information",
+                "Azure.Core": "Error",
+                "Azure.Storage": "Error"
             }
         },
         "applicationInsights": {

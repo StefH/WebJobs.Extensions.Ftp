@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Azure.WebJobs.Description;
+using WebJobs.Extensions.Ftp.Enums;
 
 namespace WebJobs.Extensions.Ftp.Trigger;
 
@@ -35,13 +36,6 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     public string? PollingInterval { get; set; }
 
     /// <summary>
-    /// If true, polling for new files will start when the function starts.
-    ///
-    /// Default value is <c>true</c>.
-    /// </summary>
-    public bool RunOnStartup { get; set; } = true;
-
-    /// <summary>
     /// Gets files within subdirectories as well. Adds the -r option to the LIST command. Some servers may not support this feature.
     ///
     /// Default value is <c>false</c>.
@@ -68,7 +62,14 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool ForceTriggerOnFirstRun { get; set; }
+    public bool TriggerOnStartup { get; set; }
+
+    /// <summary>
+    /// The trigger mode to use.
+    ///
+    /// Default value is <c>ModifyDate</c>.
+    /// </summary>
+    public TriggerMode TriggerMode { get; set; } = TriggerMode.ModifyDate;
 
     public FtpTriggerAttribute()
     {

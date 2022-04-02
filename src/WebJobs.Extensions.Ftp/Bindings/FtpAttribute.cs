@@ -12,9 +12,25 @@ namespace WebJobs.Extensions.Ftp.Bindings;
 public sealed class FtpAttribute : AbstractBaseFtpAttribute
 {
     /// <summary>
-    /// The folder to listen on. Is optional.
+    /// The folder to listen for. Is optional.
     /// </summary>
     public string? Folder { get; set; }
+
+    /// <summary>
+    /// Call Connect() on the bound IFtpClient
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool AutoConnectFtpClient { get; set; }
+
+    /// <summary>
+    /// Cache the FtpClient based on the connection-string.
+    ///
+    /// In case of <c>false</c>, the caller must the dispose FtpClient manually.
+    ///
+    /// Default value is <c>true</c>.
+    /// </summary>
+    public bool CacheFtpClient { get; set; } = true;
 
     public FtpAttribute()
     {
