@@ -1,3 +1,6 @@
+# 4.0.8 (02 April 2022)
+- [#8](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/8) - Refactor [enhancement] contributed by [StefH](https://github.com/StefH)
+
 # 4.0.7 (18 March 2022)
 - [#7](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/7) - Add option to AutoConnectFtpClient + Fix issue with Task.Run [bug] contributed by [StefH](https://github.com/StefH)
 
