@@ -14,7 +14,7 @@ To create a custom binding:
 1.  Define a class that extends from Attribute.
 2.  Create a class that extends the IAsyncCollector interface. This interface defines methods to AddAsync and FlushAsync. The system will call the AddAsync function to send data to external resources.
 3.  Create a class that implements the IConverter interface. This interface has one method:
-	-	Convert:- The system calls this method to create the AsyncCollector class.
+    -    Convert:- The system calls this method to create the AsyncCollector class.
 
 4.  Create a class that implements the interface IExtensionConfigProvider. Similar to Triggers, the system will call the Initialize method. In this method, we bind the attribute class using the AddBindingRule method and bind to the Collector using the AddToCollector method.
 
