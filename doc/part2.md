@@ -1,20 +1,22 @@
 # Custom Azure Function Extension - Part 2 - Bindings
-![Custom Binding](https://raw.githubusercontent.com/krvarma/azure-functions-nats-extension/master/images/azfn-nats-binding.png)
+
+![FTP Extension](ftp-binding.png)
+
 This article is part two of the two-part series. In my previous article, we looked into how to create a custom trigger. In this article, we will look into how to create a custom binding. 
 
 Since this a continuation of my previous article, I highly recommend reading part one before this one so that you get a basic idea of fundamentals of the custom extension and what are going to build.
 
-For the sake of clarity, I will summarize what we are going to explore. In part one, we understand the basics of custom bindings and how to create a custom trigger. We developed a custom NATS Trigger and a sample application to test the trigger in part one.
+For the sake of clarity, I will summarize what we are going to explore. In part one, we understand the basics of custom bindings and how to create a custom trigger. We developed a custom FTP Trigger and a sample application to test the trigger in part one.
 
-In this article, we will look into how to create a custom NATS binding.
+In this article, we will look into how to create a custom FTP binding.
 
 # Custom binding
 To create a custom binding:
 
-1.  Define a class that extends from Attribute.
-2.  Create a class that extends the IAsyncCollector interface. This interface defines methods to AddAsync and FlushAsync. The system will call the AddAsync function to send data to external resources.
+1.  Define a class that extends from `Attribute`.
+2.  Create a class that extends the `IAsyncCollector` interface. This interface defines methods to `AddAsync`. The system will call the `AddAsync` function to send data to external resources.
 3.  Create a class that implements the IConverter interface. This interface has one method:
-    -    Convert:- The system calls this method to create the AsyncCollector class.
+    - `Convert`: - The system calls this method to create the AsyncCollector class.
 
 4.  Create a class that implements the interface IExtensionConfigProvider. Similar to Triggers, the system will call the Initialize method. In this method, we bind the attribute class using the AddBindingRule method and bind to the Collector using the AddToCollector method.
 
@@ -27,12 +29,12 @@ Similar to Triggers, when the system starts, it searches for a class that implem
 
 # Creating Custom binding
 
-As stated before, we are creating a NATS extension here. We will use Visual Studio for development. We will also use the FtpClient library [MyNatsClient](https://github.com/danielwertheim/mynatsclient). MyNatsClient is a handy library for .NET to connect to NATS.
+As stated before, we are creating a FTP extension here. We will use Visual Studio for development. We will also use the FtpClient library [MyFTPClient](https://github.com/danielwertheim/myFTPclient). MyFTPClient is a handy library for .NET to connect to FTP.
 
 Custom Extension is a Standard .NET Library. You need to add the following packages using NuGet. Open the NuGet manager and search for:
 
     Microsoft.Azure.WebJobs.Extensions
-    MyNatsClient
+    MyFTPClient
 
 Creating binding is relatively simple. As mentioned in the previous section, we need to create attribute class, converter class, and async collector class.
 
@@ -40,17 +42,17 @@ Here is our attribute class:
 using System;
 using Microsoft.Azure.WebJobs.Description;
 
-    namespace WebJobs.Extension.Nats
+    namespace WebJobs.Extension.FTP
     {
         /// <summary>
         /// <c>Attribute</c> class for Trigger
         /// </summary>
         [AttributeUsage(AttributeTargets.Parameter)]
         [Binding]
-        public class NatsAttribute: Attribute
+        public class FTPAttribute: Attribute
         {
             // <summary>
-            // Connection string in the form of nats://<username>:<password>@<host>:<port>
+            // Connection string in the form of FTP://<username>:<password>@<host>:<port>
             // </summary>
             public string Connection { get; set; }
             // Channel string
@@ -67,36 +69,36 @@ using Microsoft.Azure.WebJobs.Description;
     }
 
 Just like in the trigger, we have connection string and channel member variables. Next is our converter class. In this class, we create our async collector instance. Here is our async collector class. Just like in the trigger, we will generate context and pass it to the Collector. The 
-Collector will use this instance to send a message to the NATS server. Here is our collector class.
+Collector will use this instance to send a message to the FTP server. Here is our collector class.
 
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.WebJobs;
     
-    namespace WebJobs.Extension.Nats.Bindings
+    namespace WebJobs.Extension.FTP.Bindings
     {
         /// <summary>
-        /// Async Collector class. Responsible for publishing to a NATS channel
+        /// Async Collector class. Responsible for publishing to a FTP channel
         /// </summary>
         /// <typeparam name="T">Data Type of value</typeparam>
-        public class NatsAsyncCollector<T>: IAsyncCollector<T>
+        public class FTPAsyncCollector<T>: IAsyncCollector<T>
         {
             /// <summary>
-            /// NatsBindingContext instance
+            /// FTPBindingContext instance
             /// </summary>
-            private readonly NatsBindingContext _context;
+            private readonly FTPBindingContext _context;
     
             /// <summary>
             /// Constructor
             /// </summary>
-            /// <param name="context">NatsBindingContext instance</param>
-            public NatsAsyncCollector(NatsBindingContext context)
+            /// <param name="context">FTPBindingContext instance</param>
+            public FTPAsyncCollector(FTPBindingContext context)
             {
                 _context = context;
             }
     
             /// <summary>
-            /// Publish message to a NATS chanel
+            /// Publish message to a FTP chanel
             /// </summary>
             /// <param name="message">Message to be published</param>
             /// <param name="cancellationToken">A Cancellation Token</param>
@@ -117,7 +119,7 @@ Collector will use this instance to send a message to the NATS server. Here is o
             }
         }
     }
-## Create a sample to test the NATS Binding
+## Create a sample to test the FTP Binding
 
 Let's create a sample function to test our binding. Our sample function looks like this:
 
@@ -125,16 +127,16 @@ Let's create a sample function to test our binding. Our sample function looks li
     using Microsoft.Azure.WebJobs;
     using Microsoft.Azure.WebJobs.Extensions.Http;
     using Microsoft.Extensions.Logging;
-    using WebJobs.Extension.Nats;
+    using WebJobs.Extension.FTP;
     
     namespace Bindings.Sample
     {
-        public static class NatsBindingsSample
+        public static class FTPBindingsSample
         {
-            [FunctionName("NatsBindingsSample")]
+            [FunctionName("FTPBindingsSample")]
             public static void Run(
                 [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-                [Nats(Connection = "NatsConnection", Channel = "SampleChannelOut")] out string message,
+                [FTP(Connection = "FTPConnection", Channel = "SampleChannelOut")] out string message,
                 ILogger log)
             {
                 string msg = req.Query["message"];
@@ -148,20 +150,20 @@ Let's create a sample function to test our binding. Our sample function looks li
     }
 An HTTP call triggers the sample function. We retrieve the message query parameter and send this text to the predefined Channel.
 
-You can use the Postman or other similar tools to test this sample function. I have created a sample node.js application to receive messages from NATS; here is the code.
+You can use the Postman or other similar tools to test this sample function. I have created a sample node.js application to receive messages from FTP; here is the code.
 
     #!/usr/bin/env node
     /* jslint node: true */
     'use strict';
     
-    var nats = require('nats').connect("nats://<username>:<password>@localhost:4222");
+    var FTP = require('FTP').connect("FTP://<username>:<password>@localhost:4222");
     
-    nats.on('error', function(e) {
-        console.log('Error [' + nats.options.url + ']: ' + e);
+    FTP.on('error', function(e) {
+        console.log('Error [' + FTP.options.url + ']: ' + e);
         process.exit();
     });
     
-    nats.on('close', function() {
+    FTP.on('close', function() {
         console.log('CLOSED');
         process.exit();
     });
@@ -175,12 +177,17 @@ You can use the Postman or other similar tools to test this sample function. I h
     
     console.log('Listening on [' + subject + ']');
     
-    nats.subscribe(subject, function(msg) {
+    FTP.subscribe(subject, function(msg) {
         console.log('Received "' + msg + '"');
     });
 
 If everything goes well, you can see the message on the console.
 
-![NATS Binding](https://raw.githubusercontent.com/krvarma/azure-functions-nats-extension/master/images/natsbinding.gif)
+![FTP Binding](https://raw.githubusercontent.com/krvarma/azure-functions-FTP-extension/master/images/FTPbinding.gif)
 
 I hope you enjoy this article and got a preliminary knowledge of how to create custom extensions for Azure Functions.
+
+---
+
+## References
+ - https://github.com/krvarma/azure-functions-FTP-extension

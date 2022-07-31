@@ -177,7 +177,6 @@ public sealed class FtpTriggerAttribute : AbstractBaseFtpAttribute
 }
 ```
 
-
 Next, we need to create a `FtpListener` class. See this [link](https://github.com/StefH/WebJobs.Extensions.Ftp/blob/main/src/WebJobs.Extensions.Ftp/Trigger/FtpListener.cs) for the complete code.
 
 The Listener class receives four parameters:
@@ -191,6 +190,7 @@ We use the `ITriggeredFunctionExecutor` instance to execute the triggered functi
 The `FtpTriggerContext` object has two member variables:
 - The `TriggerAttribute` variable is an object of our `Attribute` class.
 - The `Client` variable is an object of the `IFtpClient` interface which represents the FtpClient instance to connect FTP.
+
 Here is context class:
 ``` c#
 internal class FtpTriggerContext
@@ -252,9 +252,9 @@ public static class FtpWebJobsBuilderExtensions
 ```
 
 As you can see in this extension method, we are adding the extension using the `AddExtension` method of the `IWebJobsBuilder`.
-The `AddExtesion` method takes one parameter, our `IExtensionConfigProvier` instance.
+The `AddExtension` method takes one parameter, our `FtpExtensionConfigProvider` instance.
 We are also adding a Singleton Service to the builder.
-The constructor of the `IExtensionConfigProvider` instance will receive this server as a parameter.
+The constructor of the `FtpExtensionConfigProvider` instance will receive this server as a parameter.
 
 ---
 
@@ -279,6 +279,13 @@ The `Connection` string is from the `local.settings.json` file, and the `Channel
 
 Before running our function, we need to run a Ftp server for testing (e.g. [FileZilla(https://filezilla-project.org/download.php)]).
 
+For more examples, see [Trigger.Sample.Ftp](https://github.com/StefH/WebJobs.Extensions.Ftp/tree/main/examples/Trigger.Sample.Ftp).
+
 ---
 
-In the next part, we will look into how to create Ftp bindings, till then Happy Coding!.
+In the next part, we will look into how to create **Ftp Bindings**, till then Happy Coding!.
+
+---
+
+## References
+ - https://github.com/krvarma/azure-functions-nats-extension
