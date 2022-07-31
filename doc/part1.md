@@ -29,7 +29,7 @@ When a consumer defines a trigger or binding, the system looks for a correspondi
 ## Custom Trigger
 To create a custom Trigger, we need to:
 
- -  Define a class that extends from Attribute. This class represents our attribute class. We define all the parameters and configuration values for our trigger. In our case, we define connection string and Ftp channels.
+ -  Define a class that extends from `Attribute`. This class represents our attribute class. We define all the parameters and configuration values for our trigger. In our case, we define connection string and Ftp channels.
  -  Define a class that implements the interface `IListener`. This class contains the logic to connect to our external event source and wait for events. In our case, we will connect to the Ftp server and look for incoming messages. The IListener interface has the following functions:
      - *StartAsync*:- The system calls this function to start our listener. This function returns one Task object that completes when our listener successfully started.
      - *StopAsync*:- The system calls this function to stop our listener. This function returns one Task object that completes when the listener completely stopped.
