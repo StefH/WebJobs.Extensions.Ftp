@@ -14,7 +14,9 @@ In this article, we will look into how to create a custom FTP binding.
 To create a custom binding:
 
 1.  Define a class that extends from `Attribute`.
+
 2.  Create a class that extends the `IAsyncCollector` interface. This interface defines methods to `AddAsync`. The system will call the `AddAsync` function to send data to external resources.
+
 3.  Create a class that implements the IConverter interface. This interface has one method:
     - `Convert`: - The system calls this method to create the AsyncCollector class.
 
@@ -29,46 +31,51 @@ Similar to Triggers, when the system starts, it searches for a class that implem
 
 # Creating Custom binding
 
-As stated before, we are creating a FTP extension here. We will use Visual Studio for development. We will also use the FtpClient library [MyFTPClient](https://github.com/danielwertheim/myFTPclient). MyFTPClient is a handy library for .NET to connect to FTP.
+As stated before, we are creating a FTP extension here. We will use Visual Studio for development. We will also use the [FluentFTP](https://github.com/robinrodricks/FluentFTP) library.
 
-Custom Extension is a Standard .NET Library. You need to add the following packages using NuGet. Open the NuGet manager and search for:
+A custom Extension is a .NET Standard 2.1 Library which needs these packages from NuGet:
+- Microsoft.Azure.WebJobs.Extensions
+- FluentFTP
 
-    Microsoft.Azure.WebJobs.Extensions
-    MyFTPClient
+Creating binding is relatively simple. As mentioned in the previous section,
+we need to create attribute class, converter class, and async collector class.
 
-Creating binding is relatively simple. As mentioned in the previous section, we need to create attribute class, converter class, and async collector class.
+Here is our `FtpAttribute` class (which extends the `AbstractBaseFtpAttribute`):
+``` c#
+public sealed class FtpAttribute : AbstractBaseFtpAttribute
+{
+    /// <summary>
+    /// The folder to listen for. Is optional.
+    /// </summary>
+    public string? Folder { get; set; }
 
-Here is our attribute class:
-using System;
-using Microsoft.Azure.WebJobs.Description;
+    /// <summary>
+    /// Call Connect() on the bound IFtpClient
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool AutoConnectFtpClient { get; set; }
 
-    namespace WebJobs.Extension.FTP
+    /// <summary>
+    /// Cache the FtpClient based on the connection-string.
+    ///
+    /// In case of <c>false</c>, the caller must the dispose FtpClient manually.
+    ///
+    /// Default value is <c>true</c>.
+    /// </summary>
+    public bool CacheFtpClient { get; set; } = true;
+
+    public FtpAttribute()
     {
-        /// <summary>
-        /// <c>Attribute</c> class for Trigger
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Parameter)]
-        [Binding]
-        public class FTPAttribute: Attribute
-        {
-            // <summary>
-            // Connection string in the form of FTP://<username>:<password>@<host>:<port>
-            // </summary>
-            public string Connection { get; set; }
-            // Channel string
-            public string Channel { get; set; }
-    
-            // <siummary>
-            // Helper method to get connection string from environment variables
-            // </summary>
-            internal string GetConnectionString()
-            {
-                return Environment.GetEnvironmentVariable(Connection);
-            }
-        }
     }
 
-Just like in the trigger, we have connection string and channel member variables. Next is our converter class. In this class, we create our async collector instance. Here is our async collector class. Just like in the trigger, we will generate context and pass it to the Collector. The 
+    public FtpAttribute(string connection) : base(connection)
+    {
+    }
+}
+```
+
+Just like in the trigger, we have connection string (from the base-class) and a folder member variables. Next is our converter class. In this class, we create our async collector instance. Here is our async collector class. Just like in the trigger, we will generate context and pass it to the Collector. The 
 Collector will use this instance to send a message to the FTP server. Here is our collector class.
 
     using System.Threading;
