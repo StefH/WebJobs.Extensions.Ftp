@@ -3,7 +3,6 @@ using FluentFTP;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using WebJobs.Extensions.Ftp.Bindings;
-using WebJobs.Extensions.Ftp.Enums;
 using WebJobs.Extensions.Ftp.Models;
 using WebJobs.Extensions.Ftp.Trigger;
 
@@ -14,21 +13,38 @@ public static class FtpTriggerSample
     private const string FtpConnection = "FtpConnection";
     private const string Folder = "inbox";
 
-    [FunctionName("RunFtpTriggerFtpFileAlways")]
-    public static void RunFtpTriggerFtpFileAlways(
-        [FtpTrigger("FtpConnectionAnonymous", Folder = "inbox", PollingInterval = "30s", TriggerMode = TriggerMode.Always)] FtpFile ftpFile,
+    [FunctionName("RunFtpTriggerFtpFile")]
+    public static void RunFtpTriggerFtpFile(
+
+
+        [FtpTrigger("FtpConnectionAnonymous", Folder = "inbox", PollingInterval = "30s")] FtpFile ftpFile,
+
         ILogger log)
     {
-        log.LogInformation($"RunFtpTriggerFtpFileAlways >> {ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size} {ftpFile.Content?.Length}");
+        log.LogInformation($"{nameof(RunFtpTriggerFtpFile)} >> {ftpFile.GetType()} {ftpFile.Name} {ftpFile.FullName} {ftpFile.Size} {ftpFile.Content?.Length}");
     }
 
-    //[FunctionName("FtpTriggerFtpFiles")]
-    //public static void RunFtpTriggerFtpFiles(
-    //    [FtpTrigger(Connection = FtpConnection, Folder = Folder, PollingInterval = "10s")] FtpFile[] ftpFile,
-    //    ILogger log)
-    //{
-    //    log.LogWarning($"RunFtpTriggerFtpFiles >> {ftpFile.GetType()} {ftpFile.Length}");
-    //}
+    [FunctionName("FtpTriggerFtpFiles")]
+    public static void RunFtpTriggerFtpFiles(
+
+
+        [FtpTrigger(Connection = FtpConnection, Folder = Folder, PollingInterval = "10s", BatchSize = 3)] FtpFile[] ftpFiles,
+
+        ILogger log)
+    {
+        log.LogWarning($"{nameof(RunFtpTriggerFtpFiles)} >> {ftpFiles.GetType()} {ftpFiles.Length}");
+    }
+
+    [FunctionName("FtpTriggerFtpStreams")]
+    public static void RunFtpTriggerFtpStreams(
+
+
+        [FtpTrigger(Connection = FtpConnection, Folder = Folder, PollingInterval = "10s")] FtpStream[] ftpStreams,
+
+        ILogger log)
+    {
+        log.LogWarning($"{nameof(RunFtpTriggerFtpStreams)} >> {ftpStreams.GetType()} {ftpStreams.Length}");
+    }
 
     //[FunctionName("FtpTriggerFtpStream")]
     //public static async Task RunFtpTriggerFtpStream(
@@ -71,7 +87,7 @@ public static class FtpTriggerSample
         }
         catch (Exception e)
         {
-           log.LogError(e, "DeleteFile");
+            log.LogError(e, "DeleteFile");
         }
 
         //client.Disconnect();

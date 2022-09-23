@@ -31,7 +31,9 @@ To create a custom Trigger, we need to:
 
  -  Define a class that extends from `Attribute`. This class represents our attribute class. We define all the parameters and configuration values for our trigger. In our case, we define connection string and Ftp channels.
 
- -  Define a class that implements the interface `IListener`. This class contains the logic to connect to our external event source and wait for events. In our case, we will connect to the Ftp server and look for incoming messages. The IListener interface has the following functions:
+ -  Define a class that implements the interface `IListener`. This class contains the logic to connect to the Ftp server and wait for new Ftp Files.
+
+    The `IListener` interface has the following functions:
      - *StartAsync*:- The system calls this function to start our listener. This function returns one Task object that completes when our listener successfully started.
      - *StopAsync*:- The system calls this function to stop our listener. This function returns one Task object that completes when the listener completely stopped.
      - *Cancel*:- The system calls this function to cancel any ongoing listen operation.
@@ -56,7 +58,7 @@ To create a custom Trigger, we need to:
  -  And finally, we create a class that implements the interface `IWebJobStartup`. This interface defines the configuration actions to perform when the Function Host starts up. This interface has the following function:
      -  *Configure*:- The system call this function when the function host initializes. In this function, we will add our custom extension.
 
-So basically what happens is when the system starts, it searches for a class that implements  `IWebJobStartup`. When it found a class that implements the interface: 
+So basically what happens is when the system starts, it searches for a class that implements `IWebJobStartup`. When it found a class that implements the interface: 
 
 - The system calls the Configure method passing the `IWebJobsBuilder` object. We add the extension using the `AddExtension` method using the class that implements the `IExtensionConfigProvider` interface.
 
