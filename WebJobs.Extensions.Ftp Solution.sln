@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{BE2249DB-5C6
 		doc\part2.md = doc\part2.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebJob.Trigger.Sample.Ftp", "examples\WebJob.Trigger.Sample.Ftp\WebJob.Trigger.Sample.Ftp.csproj", "{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{CB53BC0E-9A72-4208-B1D0-75D6C60DAED3} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 		{DC826E1F-54DD-433E-896F-35F75EDE1B86} = {4A925250-CB80-4530-A60F-3F28037F13FD}
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8ED04F5F-E0ED-4242-9DC7-CC6D6EF14892}

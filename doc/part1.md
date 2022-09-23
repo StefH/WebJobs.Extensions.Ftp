@@ -30,6 +30,7 @@ When a consumer defines a trigger or binding, the system looks for a correspondi
 To create a custom Trigger, we need to:
 
  -  Define a class that extends from `Attribute`. This class represents our attribute class. We define all the parameters and configuration values for our trigger. In our case, we define connection string and Ftp channels.
+
  -  Define a class that implements the interface `IListener`. This class contains the logic to connect to our external event source and wait for events. In our case, we will connect to the Ftp server and look for incoming messages. The IListener interface has the following functions:
      - *StartAsync*:- The system calls this function to start our listener. This function returns one Task object that completes when our listener successfully started.
      - *StopAsync*:- The system calls this function to stop our listener. This function returns one Task object that completes when the listener completely stopped.
@@ -57,9 +58,12 @@ To create a custom Trigger, we need to:
 
 So basically what happens is when the system starts, it searches for a class that implements  `IWebJobStartup`. When it found a class that implements the interface: 
 
- - The system calls the Configure method passing the `IWebJobsBuilder` object. We add the extension using the `AddExtension` method using the class that implements the `IExtensionConfigProvider` interface.
+- The system calls the Configure method passing the `IWebJobsBuilder` object. We add the extension using the `AddExtension` method using the class that implements the `IExtensionConfigProvider` interface.
+
 - The system calls the Initialise method of the `IExtensionConfigProvider` passing `ExtensionConfigContext` as a parameter. Our implementation of the Initialize method adds the add the binding rule using the `AddBindingRule` method of the `ExtensionConfigContext`, which returns a `BindingRule` object. We call the `BindToTrigger` method to add our trigger passing `TriggerBindingProvider` as a parameter.
+
 -  After that system calls the `TryCreateAsync` function of the `TriggerBindingProvider` passing the `TriggerBindingProviderContext` as a parameter, in this `TryCreateAsync` method, we check whether our `Attribute` class present or not. We create our class that implements the `ITriggerBinding` interface and return a Task that contains the object.
+
 - The system then calls the `CreateListenerAsync` method of our class that implements the `ITriggerBinding` interface passing `ListenerFactoryContext` object. In our `CreateListenerAsync`, we return a class that implements the `IListener` interface. The `ListenerFactoryContext` object contains a class that implements the `ITriggeredFunctionExecutor` interface. The `ITriggeredFunctionExecutor` interface has a method called `TryExecuteAsync`. Using this method, we can execute the triggered function, passing the event data and `CancellationToken`.
 
 ## Creating FTP Custom Extension

@@ -203,7 +203,7 @@ internal sealed class FtpListener : IListener
         {
             try
             {
-                await using var stream = new MemoryStream();
+                using var stream = new MemoryStream();
                 await _context.Client.DownloadAsync(stream, item.FullName, token: cancellationToken);
                 ftpFile.Content = stream.ToArray();
             }

@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <!--- This is example on how to use netcoreapp3.1 (it needs AzureFunctionsVersion v3) -->
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <AzureFunctionsVersion>v3</AzureFunctionsVersion>
         <LangVersion>10.0</LangVersion>

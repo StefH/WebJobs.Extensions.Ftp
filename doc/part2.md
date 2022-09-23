@@ -77,124 +77,95 @@ public sealed class FtpAttribute : AbstractBaseFtpAttribute
 
 Just like in the trigger, we have connection string (from the base-class) and a folder member variables. Next is our converter class. In this class, we create our async collector instance. Here is our async collector class. Just like in the trigger, we will generate context and pass it to the Collector. The 
 Collector will use this instance to send a message to the FTP server. Here is our collector class.
+``` c#
+internal class FtpAsyncCollector<T> : IAsyncCollector<T>
+{
+    private readonly ILogger _logger;
 
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Azure.WebJobs;
-    
-    namespace WebJobs.Extension.FTP.Bindings
+    private readonly FtpBindingContext _context;
+
+    public FtpAsyncCollector(ILogger logger, FtpBindingContext context)
     {
-        /// <summary>
-        /// Async Collector class. Responsible for publishing to a FTP channel
-        /// </summary>
-        /// <typeparam name="T">Data Type of value</typeparam>
-        public class FTPAsyncCollector<T>: IAsyncCollector<T>
+        _logger = logger;
+        _context = context;
+    }
+
+    /// <summary>
+    /// UploadAsync to FTP
+    /// </summary>
+    /// <param name="message">Message to be published</param>
+    /// <param name="cancellationToken">A Cancellation Token</param>
+    /// <returns>A Task that completes when the message us published</returns>
+    public Task AddAsync(T message, CancellationToken cancellationToken = default)
+    {
+        //
+    }
+
+    private async Task AddFtpFileAsync(FtpFile ftpFile, CancellationToken cancellationToken)
+    {
+        //
+    }
+
+    private async Task AddFtpStreamAsync(FtpStream ftpStream, CancellationToken cancellationToken)
+    {
+        //
+    }
+
+    public Task FlushAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
+    private async Task CheckIfConnectedAsync(CancellationToken cancellationToken)
+    {
+        if (!_context.Client.IsConnected)
         {
-            /// <summary>
-            /// FTPBindingContext instance
-            /// </summary>
-            private readonly FTPBindingContext _context;
-    
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="context">FTPBindingContext instance</param>
-            public FTPAsyncCollector(FTPBindingContext context)
-            {
-                _context = context;
-            }
-    
-            /// <summary>
-            /// Publish message to a FTP chanel
-            /// </summary>
-            /// <param name="message">Message to be published</param>
-            /// <param name="cancellationToken">A Cancellation Token</param>
-            /// <returns>A Task that completes when the message us published</returns>
-            public Task AddAsync(T message, CancellationToken cancellationToken = default)
-            {
-                return _context.client.Publish(_context.attribute.Channel, message.ToString());
-            }
-    
-            /// <summary>
-            /// Flush any pending publish
-            /// </summary>
-            /// <param name="cancellationToken">A Cancellation token/param>
-            /// <returns></returns>
-            public Task FlushAsync(CancellationToken cancellationToken = default)
-            {
-                return Task.CompletedTask;
-            }
+            await _context.Client.ConnectAsync(cancellationToken);
         }
     }
+}
+```
+
 ## Create a sample to test the FTP Binding
 
 Let's create a sample function to test our binding. Our sample function looks like this:
+``` c#
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using WebJobs.Extensions.Ftp.Bindings;
+using WebJobs.Extensions.Ftp.Models;
 
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Extensions.Http;
-    using Microsoft.Extensions.Logging;
-    using WebJobs.Extension.FTP;
-    
-    namespace Bindings.Sample
+namespace Bindings.Sample.Ftp;
+
+public static class FtpBindingsSample
+{
+    [FunctionName("FtpBindingFtpFile")]
+    public static void RunBindingFtpFile(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+        [Ftp(Connection = "FtpConnection", Folder = "inbox")] out FtpFile item,
+        ILogger log)
     {
-        public static class FTPBindingsSample
+        string msg = req.Query["message"];
+
+        log.LogInformation($"Received message {msg}");
+
+        item = new FtpFile
         {
-            [FunctionName("FTPBindingsSample")]
-            public static void Run(
-                [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-                [FTP(Connection = "FTPConnection", Channel = "SampleChannelOut")] out string message,
-                ILogger log)
-            {
-                string msg = req.Query["message"];
-    
-                log.LogInformation("C# HTTP trigger function processed a request.");
-                log.LogInformation($"Received message {msg}");
-    
-                message = msg;
-            }
-        }
+            Name = "stef1.txt",
+            Content = Encoding.UTF8.GetBytes(msg)
+        };
     }
-An HTTP call triggers the sample function. We retrieve the message query parameter and send this text to the predefined Channel.
-
-You can use the Postman or other similar tools to test this sample function. I have created a sample node.js application to receive messages from FTP; here is the code.
-
-    #!/usr/bin/env node
-    /* jslint node: true */
-    'use strict';
-    
-    var FTP = require('FTP').connect("FTP://<username>:<password>@localhost:4222");
-    
-    FTP.on('error', function(e) {
-        console.log('Error [' + FTP.options.url + ']: ' + e);
-        process.exit();
-    });
-    
-    FTP.on('close', function() {
-        console.log('CLOSED');
-        process.exit();
-    });
-    
-    var subject = "SampleChannelOut1"
-    
-    if (!subject) {
-        console.log('Usage: node-sub <subject>');
-        process.exit();
-    }
-    
-    console.log('Listening on [' + subject + ']');
-    
-    FTP.subscribe(subject, function(msg) {
-        console.log('Received "' + msg + '"');
-    });
-
-If everything goes well, you can see the message on the console.
-
-![FTP Binding](https://raw.githubusercontent.com/krvarma/azure-functions-FTP-extension/master/images/FTPbinding.gif)
+}
+```
 
 I hope you enjoy this article and got a preliminary knowledge of how to create custom extensions for Azure Functions.
 
 ---
 
 ## References
- - https://github.com/krvarma/azure-functions-FTP-extension
+ - https://github.com/krvarma/azure-functions-nats-extension
