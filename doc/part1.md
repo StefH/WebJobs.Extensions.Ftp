@@ -40,17 +40,23 @@ To create a custom Trigger, we need to:
      - *Dispose*:- IDisposable's dispose function.
 
  -  Define a class that implements the interface `ITriggerBinding`. In this class, we create our listener and bind our trigger data. The ITriggerBinding interface has the following functions:
-    -  *CreateListenerAsync*:- The system calls this function to create a listener. This function returns a Task object that has our listener.
-    -  *BindAsync*:- This function is called to bind a specified value using a binding context. When our listener receives an event, we try to execute the function, passing the event data. This event data is encapsulated in a `TriggeredFunctionData` class and send to the Azure Function. In the `BindAsync`, we will bind this value to our corresponding data. This function returns a `TriggerData` class. `TriggerData` class accepts a class that implements an `IValueBinder` interface and a read-only dictionary. We will revisit this later in this article.
-    -  *ToParameterDescriptor*:- The system calls this function to get a description of the binding.
+    - *CreateListenerAsync*:- The system calls this function to create a listener. This function returns a Task object that has our listener.
+
+    - *BindAsync*:- This function is called to bind a specified value using a binding context. When our listener receives an event, we try to execute the function, passing the event data.
+
+      This event data is encapsulated in a `TriggeredFunctionData` class and send to the Azure Function.
+      In the `BindAsync`, we will bind this value to our corresponding data. This function returns a `TriggerData` class.
+      The `TriggerData` class accepts a class that implements an `IValueBinder` interface and a read-only dictionary, this will revisited later in this article.
+
+    - *ToParameterDescriptor*:- The system calls this function to get a description of the binding.
+
+ -  Define a class that implements the interface `ITriggerBindingProvider`. This class is a provider class that returns a class that implements the `ITriggerBinding` interface. This class has the following methods:
+     -  *TryCreateAsync*:- When functions are being discovered this function wil be called to get a class that implements the `ITriggerBinding` interface. The system will pass a `TriggerBindingProviderContext` class as a parameter. In this function, we check whether the `TriggerBindingProviderContext` object contains our custom attribute. If the `Attribute` is present, we will create TriggerBinding class and return a Task.
 
  -  Define a class that implements the interface `IValueBinder`. As explained in the `BindAsync` section, we are binding the trigger data to our data class using this class. The `IValueBinder` has three methods:
      -  *GetValueAsync*:- Returns a task that has the value object.
      -  *SetValueAsync*: - Returns a task that completes when the object to our data class completes.
      -  *ToInvokeString*:- Returns object string.
-
- -  Define a class that implements the interface `ITriggerBindingProvider`. This class is a provider class that returns a class that implements the `ITriggerBinding` interface. This class has the following function:
-     -  *TryCreateAsync*:- The system call this function to get a class that implements the `ITriggerBinding` interface. The system will pass a `TriggerBindingProviderContext` class as a parameter. In this function, we check whether the `TriggerBindingProviderContext` object contains our custom attribute. If the `Attribute` is present, we will create TriggerBinding class and return a Task.
 
  -  Create a class that implements the interface `IExtensionConfigProvider`. The `IExtensionConfigProvider` defines an interface enabling third party extension to register. The interface has the following function:
      -  *Initialize*:- In this function, we will register all our triggers and bindings.
@@ -295,3 +301,5 @@ In the next part, we will look into how to create **Ftp Bindings**, till then Ha
 
 ## References
  - https://github.com/krvarma/azure-functions-nats-extension
+ - https://www.tpeczek.com/2018/11/azure-functions-20-extensibility_20.html
+ - https://geradegeldenhuys.net/read/custom-azure-function-trigger/
