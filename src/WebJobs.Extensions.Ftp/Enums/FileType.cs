@@ -1,4 +1,4 @@
-namespace WebJobs.Extensions.Ftp.Models;
+namespace WebJobs.Extensions.Ftp.Enums;
 
 internal enum FileType
 {
