@@ -20,18 +20,18 @@ public static class FtpBindingsSample
         [Ftp(Connection = "FtpConnection", Folder = "inbox")] out FtpFile? item,
         ILogger log)
     {
-        if (!req.Query.TryGetValue("message", out StringValues value))
+        if (!req.Query.TryGetValue("message", out var stringValues))
         {
             item = default;
             return new OkObjectResult("Please provide a query parameter 'Message' with a value.");
         }
 
-        log.LogInformation($"Received message {value}");
+        log.LogInformation($"Received message {stringValues}");
 
         item = new FtpFile
         {
             Name = "stef-ftpfile.txt",
-            Content = Encoding.UTF8.GetBytes(value)
+            Content = Encoding.UTF8.GetBytes(stringValues)
         };
 
         return new OkObjectResult("FtpFile added");
@@ -43,18 +43,18 @@ public static class FtpBindingsSample
         [Ftp(Connection = "FtpConnection", Folder = "inbox")] out FtpStream? item,
         ILogger log)
     {
-        if (!req.Query.TryGetValue("message", out StringValues value))
+        if (!req.Query.TryGetValue("message", out var stringValues))
         {
             item = default;
             return new OkObjectResult("Please provide a query parameter 'Message' with a value.");
         }
 
-        log.LogInformation($"Received message {value}");
+        log.LogInformation($"Received message {stringValues}");
 
         item = new FtpStream
         {
             Name = "stef-ftpstream.txt",
-            Stream = new MemoryStream(Encoding.UTF8.GetBytes(value))
+            Stream = new MemoryStream(Encoding.UTF8.GetBytes(stringValues))
         };
 
         return new OkObjectResult("FtpStream added");
@@ -66,17 +66,17 @@ public static class FtpBindingsSample
         [Ftp(Connection = "FtpConnection", Folder = "inbox")] IAsyncCollector<FtpFile> collector,
         ILogger log)
     {
-        if (!req.Query.TryGetValue("message", out StringValues value))
+        if (!req.Query.TryGetValue("message", out var stringValues))
         {
             return new OkObjectResult("Please provide a query parameter 'Message' with a value.");
         }
 
-        log.LogInformation($"Received message {value}");
+        log.LogInformation($"Received message {stringValues}");
 
         var item = new FtpFile
         {
             Name = "stef-asynccollector.txt",
-            Content = Encoding.UTF8.GetBytes(value)
+            Content = Encoding.UTF8.GetBytes(stringValues)
         };
 
         await collector.AddAsync(item);
