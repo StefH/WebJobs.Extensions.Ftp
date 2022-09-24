@@ -32,18 +32,20 @@ internal class FtpExtensionConfigProvider : IExtensionConfigProvider
     /// <param name="context">Extension config context</param>
     public void Initialize(ExtensionConfigContext context)
     {
-        // Add trigger first
+        // 1. Add trigger
         var triggerRule = context.AddBindingRule<FtpTriggerAttribute>();
         triggerRule.BindToTrigger(new FtpTriggerBindingProvider(_logger, this));
 
-        // Then add bindings
+        // 2. Add bindings
         var bindingRule = context.AddBindingRule<FtpAttribute>();
 
+        // 2a. Add Input-Binding
+        bindingRule.BindToInput<IFtpClient>(typeof(FtpBindingConverterForIFtpClient), this);
+
+        // 2b. Add IAsyncCollector Output-Binding for FtpFile and FtpStream
         var arguments = new object[] { _logger, this };
         bindingRule.BindToCollector<FtpFile>(typeof(FtpBindingConverterForIAsyncCollector<>), arguments);
         bindingRule.BindToCollector<FtpStream>(typeof(FtpBindingConverterForIAsyncCollector<>), arguments);
-
-        bindingRule.BindToInput<IFtpClient>(typeof(FtpBindingConverterForIFtpClient), this);
     }
 
     /// <summary>

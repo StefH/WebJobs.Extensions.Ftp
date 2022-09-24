@@ -30,17 +30,17 @@ internal class FtpAsyncCollector<T> : IAsyncCollector<T>
     /// <summary>
     /// UploadAsync to FTP
     /// </summary>
-    /// <param name="message">Message to be published</param>
+    /// <param name="item">Item to add</param>
     /// <param name="cancellationToken">A Cancellation Token</param>
-    /// <returns>A Task that completes when the message us published</returns>
-    public Task AddAsync(T message, CancellationToken cancellationToken = default)
+    /// <returns>A Task that completes when the item is added.</returns>
+    public Task AddAsync(T item, CancellationToken cancellationToken = default)
     {
-        return message switch
+        return item switch
         {
             FtpFile ftpFile => AddFtpFileAsync(ftpFile, cancellationToken),
             FtpStream ftpStream => AddFtpStreamAsync(ftpStream, cancellationToken),
 
-            _ => throw new InvalidCastException($"Message of type '{message?.GetType()}' is not supported.")
+            _ => throw new InvalidCastException($"Item of type '{item?.GetType()}' is not supported.")
         };
     }
 
