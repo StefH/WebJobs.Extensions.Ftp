@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +34,7 @@ public static class FtpBindingsSample
         item = new FtpFile
         {
             Name = "stef-ftpfile.txt",
-            Content = Encoding.UTF8.GetBytes(stringValues)
+            Content = Encoding.UTF8.GetBytes(stringValues.First())
         };
 
         return new OkObjectResult("FtpFile added");
@@ -56,14 +57,14 @@ public static class FtpBindingsSample
         item = new FtpStream
         {
             Name = "stef-ftpstream.txt",
-            Stream = new MemoryStream(Encoding.UTF8.GetBytes(stringValues))
+            Stream = new MemoryStream(Encoding.UTF8.GetBytes(stringValues.First()))
         };
 
         return new OkObjectResult("FtpStream added");
     }
 
     [FunctionName("BindingIAsyncCollector")]
-    public static async Task<IActionResult> RunBindingIAsyncCollector(
+    public static async Task<IActionResult> RunBindingIAsyncCollectorAsync(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
 
 
@@ -81,7 +82,7 @@ public static class FtpBindingsSample
         var item = new FtpFile
         {
             Name = "stef-asynccollector.txt",
-            Content = Encoding.UTF8.GetBytes(stringValues)
+            Content = Encoding.UTF8.GetBytes(stringValues.First())
         };
 
         await collector.AddAsync(item);
