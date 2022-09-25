@@ -25,8 +25,11 @@ To create a custom binding:
 Similar to Triggers, when the system starts, it searches for a class that implements IWebJobStartup. When it found a class that implements the interface:
 
 1.  The system calls the Configure method passing the IWebJobsBuilder object. We add the extension using the AddExtension method using the class that implements the IExtensionConfigProvider interface.
+
 2.  The system calls the Initialise method of the IExtensionConfigProvider passing ExtensionConfigContext as a parameter. Our implementation of the Initialize method adds the add the binding rule using the AddBindingRule method of the ExtensionConfigContext, which returns a BindingRule object. We call the BindToCollector to add our binding, passing the Converter as a parameter.
+
 3.  The system calls the Convert method of the ICoverter. Our implementation creates an instance of AsyncCollector class and return.
+
 4.  The systems call AddAsync function to send data to external services.
 
 # Creating Custom binding
@@ -168,4 +171,4 @@ I hope you enjoy this article and got a preliminary knowledge of how to create c
 ---
 
 ## References
- - https://github.com/krvarma/azure-functions-nats-extension
+ - https://github.com/krvarma/azure-functions-Ftp-extension

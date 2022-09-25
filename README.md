@@ -142,4 +142,4 @@ public static void RunFtpTriggerSampleWithClient(
 ---
 
 ## References
- - https://github.com/krvarma/azure-functions-nats-extension
+ - https://github.com/krvarma/azure-functions-Ftp-extension
