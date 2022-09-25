@@ -19,7 +19,7 @@ public class IAsyncCollectorTests
     [Fact]
     public async Task RunBindingIAsyncCollectorAsync_With_A_Message_Should_Call_AddAsync()
     {
-        // Arrange
+        // 1. Arrange : Request
         var value = "test";
         var bytes = Encoding.UTF8.GetBytes(value);
         var requestMock = new Mock<HttpRequest>();
@@ -29,20 +29,26 @@ public class IAsyncCollectorTests
         };
         requestMock.Setup(r => r.Query).Returns(new QueryCollection(queryParameters));
 
+        // 2. Arrange : IAsyncCollector<FtpFile>
         var collectorMock = new Mock<IAsyncCollector<FtpFile>>();
 
-        // Act
-        var response = await FtpBindingsSample.RunBindingIAsyncCollectorAsync(requestMock.Object, collectorMock.Object, Mock.Of<ILogger>());
+        // 3. Act
+        var response = await FtpBindingsSample.RunBindingIAsyncCollectorAsync
+        (
+            requestMock.Object,
+            collectorMock.Object,
+            Mock.Of<ILogger>()
+        );
 
-        // Assert
+        // 4. Assert
         response.Should().BeOfType<OkObjectResult>().Which.Value.Should().Be("FtpFile added to IAsyncCollector.");
 
-        // Verify
+        // 5. Verify
         Expression<Func<FtpFile, bool>> match = f => f.Name == "stef-asynccollector.txt" &&
-                                                     f.Content != null &&
-                                                     bytes.SequenceEqual(f.Content);
+                                                     f.Content != null && bytes.SequenceEqual(f.Content);
 
         collectorMock.Verify(c => c.AddAsync(It.Is(match), It.IsAny<CancellationToken>()), Times.Once);
         collectorMock.VerifyNoOtherCalls();
     }
+
 }
