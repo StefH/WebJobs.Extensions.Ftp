@@ -13,7 +13,7 @@ public static class FtpTriggerSample
     private const string FtpConnection = "FtpConnection";
     private const string Folder = "inbox";
 
-    [FunctionName("RunFtpTriggerFtpFile")]
+    [FunctionName("FtpTriggerFtpFile")]
     public static void RunFtpTriggerFtpFile(
 
 
