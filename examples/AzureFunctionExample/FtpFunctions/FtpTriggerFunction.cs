@@ -36,6 +36,8 @@ public class FtpTriggerFunction
 
         await client.DeleteFileAsync(ftpFile.FullName);
 
+
+
         //var clientAnonymous = _ftpClientFactory.CreateClient("Anonymous", true);
         //var stream = await clientAnonymous.OpenReadAsync(ftpItem.FullName);
         //await using var mem = new MemoryStream();

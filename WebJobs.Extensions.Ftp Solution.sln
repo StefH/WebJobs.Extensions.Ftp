@@ -26,13 +26,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebJobs.Extensions.Ftp4", "src\WebJobs.Extensions.Ftp4\WebJobs.Extensions.Ftp4.csproj", "{DC826E1F-54DD-433E-896F-35F75EDE1B86}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{6486DF70-1779-4853-B97F-12F5DE40F982}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunctionFtpExample", "examples\AzureFunctionExample\AzureFunctionFtpExample.csproj", "{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{BE2249DB-5C6E-4E48-8C86-C8C472B96B08}"
 	ProjectSection(SolutionItems) = preProject
-		_\custom-extension-part1.md = _\custom-extension-part1.md
-		_\custom-extension-part2.md = _\custom-extension-part2.md
+		doc\part1.md = doc\part1.md
+		doc\part2.md = doc\part2.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunctionFtpExample", "examples\AzureFunctionExample\AzureFunctionFtpExample.csproj", "{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebJob.Trigger.Sample.Ftp", "examples\WebJob.Trigger.Sample.Ftp\WebJob.Trigger.Sample.Ftp.csproj", "{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DA155490-91C9-4A0A-9CC3-9D7589B8E4FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{AE53EE68-FFCB-4B3A-B37C-811766877FC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +66,14 @@ Global
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE53EE68-FFCB-4B3A-B37C-811766877FC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE53EE68-FFCB-4B3A-B37C-811766877FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE53EE68-FFCB-4B3A-B37C-811766877FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE53EE68-FFCB-4B3A-B37C-811766877FC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,8 +83,9 @@ Global
 		{9D49B43D-AF6E-4685-A6AE-A4B70BC52000} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 		{CB53BC0E-9A72-4208-B1D0-75D6C60DAED3} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
 		{DC826E1F-54DD-433E-896F-35F75EDE1B86} = {4A925250-CB80-4530-A60F-3F28037F13FD}
-		{6486DF70-1779-4853-B97F-12F5DE40F982} = {A0801AC7-D3C2-40B4-9A86-D40E2D032F11}
 		{E27EBE0F-0D59-47F2-81CC-9AB425ED4B5F} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
+		{966BDFCC-1FE6-4072-B786-35FE52CEE6F2} = {B89D4B90-20BE-42B9-BEF5-00C9423B73A1}
+		{AE53EE68-FFCB-4B3A-B37C-811766877FC3} = {DA155490-91C9-4A0A-9CC3-9D7589B8E4FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8ED04F5F-E0ED-4242-9DC7-CC6D6EF14892}

@@ -79,6 +79,24 @@ internal sealed class FtpListener : IListener
         }
     }
 
+    /// <summary>
+    /// Stop current listening operation
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _context.Client.DisconnectAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            // Ignore any Exception and only log the exception
+            _logger.LogWarning(ex, "Error during stopping {client}.", nameof(FtpClient));
+        }
+    }
+
     private async Task GetListingAndGetFilesAsync(CancellationToken cancellationToken)
     {
         var listItems = await GetListingAsync(cancellationToken);
@@ -203,7 +221,7 @@ internal sealed class FtpListener : IListener
         {
             try
             {
-                await using var stream = new MemoryStream();
+                using var stream = new MemoryStream();
                 await _context.Client.DownloadAsync(stream, item.FullName, token: cancellationToken);
                 ftpFile.Content = stream.ToArray();
             }
@@ -215,24 +233,6 @@ internal sealed class FtpListener : IListener
         }
 
         return ftpFile;
-    }
-
-    /// <summary>
-    /// Stop current listening operation
-    /// </summary>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns></returns>
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
-        try
-        {
-            await _context.Client.DisconnectAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            // Ignore any Exception and only log the exception
-            _logger.LogWarning(ex, "Error during stopping {client}.", nameof(FtpClient));
-        }
     }
 
     private async Task<FtpListItem[]> GetListingAsync(CancellationToken cancellationToken)

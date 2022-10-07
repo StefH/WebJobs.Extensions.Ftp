@@ -15,8 +15,12 @@ Or via the Visual Studio NuGet package manager or if you use the `dotnet` comman
 
 `dotnet add package WebJobs.Extensions.Ftp`
 
+## :books: Documentation
+- [Custom Azure Function Extension - Part 1 - Triggers](./doc/part1.md)
+- [Custom Azure Function Extension - Part 2 - Bindings](./doc/part2.md)
 
-## Usage
+
+## :wrench: Usage
 
 ### Configuration
 Add a `FtpConnection` property with the url to the FTP server.
@@ -138,4 +142,4 @@ public static void RunFtpTriggerSampleWithClient(
 ---
 
 ## References
- - https://github.com/krvarma/azure-functions-nats-extension
+ - https://github.com/krvarma/azure-functions-Ftp-extension

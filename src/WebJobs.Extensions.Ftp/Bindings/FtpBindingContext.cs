@@ -20,7 +20,7 @@ internal class FtpBindingContext
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="ftpAttribute">Nats Binding Attribute</param>
+    /// <param name="ftpAttribute">Ftp Binding Attribute</param>
     /// <param name="client">FtpClient</param>
     public FtpBindingContext(FtpAttribute ftpAttribute, IFtpClient client)
     {
