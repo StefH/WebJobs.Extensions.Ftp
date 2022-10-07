@@ -1,3 +1,6 @@
+# 4.0.9 (07 October 2022)
+- [#9](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/9) - Update documentation [documentation] contributed by [StefH](https://github.com/StefH)
+
 # 4.0.8 (02 April 2022)
 - [#8](https://github.com/StefH/WebJobs.Extensions.Ftp/pull/8) - Refactor [enhancement] contributed by [StefH](https://github.com/StefH)
 
