@@ -29,7 +29,7 @@ When a consumer defines a trigger or binding, the system looks for a correspondi
 ## Custom Trigger
 To create a custom Trigger, we need to:
 
- -  Define a class that extends from `Attribute`. This class represents our attribute class. We define all the parameters and configuration values for our trigger. In our case, we define connection string and Ftp channels.
+ -  Define a class that extends from `Attribute`. This class represents our attribute class. We define all the parameters and configuration values for our trigger. In our case, we define connection string and Ftp folder.
 
  -  Define a class that implements the interface `IListener`. This class contains the logic to connect to the Ftp server and wait for new Ftp Files.
 
@@ -219,7 +219,7 @@ internal class FtpTriggerContext
 }
 ```
 
-The `FtpListener` class uses the `FtpClient` object to subscribe to a Ftp channel. When we receive a message, we invoke the function using the `ITriggeredFunctionExecutor` instance.
+The `FtpListener` class uses the `FtpClient` object to subscribe to a Ftp folder. When we receive a message, we invoke the function using the `ITriggeredFunctionExecutor` instance.
 
 Next, we need to create `TriggerBinding` and `TriggerBindingProvider` class. There are relatively simple classes. The `TryCreateAsync` in the `FtpTriggerBindingProvider` class create `FtpTriggerBinding` instance and return. One thing to note here is, creating the context class. We create the `FtpTriggerContext` class instance by calling the `CreateContext` method of the `FtpExtensionConfigProvider` class. We will create the context class and pass it to the `FtpTriggerBinding` object.
 
@@ -287,9 +287,9 @@ public static class FtpTriggerSample
 ```
 
 This function is straightforward, just log some informational message.
-The `Connection` string is from the `local.settings.json` file, and the `Channel` is hard-coded.
+The `Connection` string is from the `local.settings.json` file, and the `folder` is hard-coded.
 
-Before running our function, we need to run a Ftp server for testing (e.g. [FileZilla(https://filezilla-project.org/download.php)]).
+Before running our function, we need to run a Ftp server for testing (e.g. [FileZilla](https://filezilla-project.org/download.php)).
 
 For more examples, see [Trigger.Sample.Ftp](https://github.com/StefH/WebJobs.Extensions.Ftp/tree/main/examples/Trigger.Sample.Ftp).
 
