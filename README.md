@@ -1,11 +1,11 @@
 # WebJobs.Extensions.Ftp
 
 An extension for WebJobs which uses [FluentFTP](https://github.com/robinrodricks/FluentFTP) to support:
-- Ftp Trigger on a new FtpFile, FtpFile[], FtpStream and FtpStream[]. 
-- Ftp Bindings on: IAsyncCollector, IFtpClient, FtpFile and FtpStream
+- *Ftp Trigger* on a new `FtpFile`, `FtpFile[]`, `FtpStream` and `FtpStream[]`. 
+- *Ftp Bindings* on: `IAsyncCollector`, `IFtpClient`, `FtpFile` and `FtpStream`.
 
 ## NuGet
-[![NuGet Badge](https://buildstats.info/nuget/WebJobs.Extensions.Ftp)](https://www.nuget.org/packages/WebJobs.Extensions.Ftp)
+[![NuGet Badge](https://img.shields.io/nuget/v/WebJobs.Extensions.Ftp)](https://www.nuget.org/packages/WebJobs.Extensions.Ftp)
 
 You can install from NuGet using the following command in the package manager window:
 
