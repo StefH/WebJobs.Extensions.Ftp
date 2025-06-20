@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="../../version.xml" />
 
     <PropertyGroup>
         <Version>3.$(PatchVersion)</Version>
         <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <PackageIcon>icon.png</PackageIcon>
         <Title>WebJobs.Extensions.Ftp</Title>
@@ -16,18 +16,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Factories\IFtpClientFactoryInternal.cs" />
+        <Compile Remove="Factories\IFtpClientFactoryInternal.cs" />
     </ItemGroup>
 
     <ItemGroup>
         <None Include="../../resources/icon.png" Pack="true" PackagePath="" />
+        <None Include="../../PackageReadme.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentFTP" Version="37.0.2" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="3.0.6" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.29" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

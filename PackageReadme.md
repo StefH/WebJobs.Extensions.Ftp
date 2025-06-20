@@ -1,28 +1,12 @@
-# ![icon](./resources/icon_32x32.png) WebJobs.Extensions.Ftp
+## WebJobs.Extensions.Ftp
 
 An extension for WebJobs which uses [FluentFTP](https://github.com/robinrodricks/FluentFTP) to support:
 - *Ftp Trigger* on a new `FtpFile`, `FtpFile[]`, `FtpStream` and `FtpStream[]`. 
 - *Ftp Bindings* on: `IAsyncCollector`, `IFtpClient`, `FtpFile` and `FtpStream`.
 
-## NuGet
-[![NuGet Badge](https://img.shields.io/nuget/v/WebJobs.Extensions.Ftp)](https://www.nuget.org/packages/WebJobs.Extensions.Ftp)
+### :wrench: Usage
 
-You can install from NuGet using the following command in the package manager window:
-
-`Install-Package WebJobs.Extensions.Ftp`
-
-Or via the Visual Studio NuGet package manager or if you use the `dotnet` command:
-
-`dotnet add package WebJobs.Extensions.Ftp`
-
-## :books: Documentation
-- [Custom Azure Function Extension - Part 1 - Triggers](./doc/part1.md)
-- [Custom Azure Function Extension - Part 2 - Bindings](./doc/part2.md)
-
-
-## :wrench: Usage
-
-### Configuration
+#### Configuration
 Add a `FtpConnection` property with the url to the FTP server.
 
 ``` json
@@ -33,9 +17,9 @@ Add a `FtpConnection` property with the url to the FTP server.
 }
 ```
 
-### Ftp Triggers
+#### Ftp Triggers
 
-#### Trigger on FtpItem
+##### Trigger on FtpItem
 ``` c#
 [FunctionName("FtpTriggerFtpFile")]
 public static void RunFtpTriggerFtpFile(
@@ -46,7 +30,7 @@ public static void RunFtpTriggerFtpFile(
 }
 ```
 
-#### Trigger on FtpStream
+##### Trigger on FtpStream
 ``` c#
 [FunctionName("FtpTriggerFtpStream")]
 public static async Task RunFtpTriggerFtpStream(
@@ -58,9 +42,9 @@ public static async Task RunFtpTriggerFtpStream(
 ```
 
 
-### Ftp Binding
+#### Ftp Binding
 
-#### Binding on FtpFile
+##### Binding on FtpFile
 ``` c#
 [FunctionName("FtpBindingFtpFile")]
 public static void RunBindingFtpFile(
@@ -80,7 +64,7 @@ public static void RunBindingFtpFile(
 }
 ```
 
-#### Binding on FtpStream
+##### Binding on FtpStream
 ``` c#
 [FunctionName("FtpBindingFtpStream")]
 public static void RunBindingFtpStream(
@@ -100,7 +84,7 @@ public static void RunBindingFtpStream(
 }
 ```
 
-#### Binding on IAsyncCollector
+##### Binding on IAsyncCollector
 ``` c#
 [FunctionName("BindingIAsyncCollector")]
 public static async Task RunBindingIAsyncCollector(
@@ -122,7 +106,7 @@ public static async Task RunBindingIAsyncCollector(
 }
 ```
 
-### Combine Ftp Trigger and Ftp Binding
+#### Combine Ftp Trigger and Ftp Binding
 The following example shows how to combine a trigger and a binding to process and delete a file.
 
 The `IFtpClient` is exposed here, which allows full access to the FTP server.
@@ -139,13 +123,7 @@ public static void RunFtpTriggerSampleWithClient(
 }
 ```
 
----
-
-## References
- - https://github.com/krvarma/azure-functions-Ftp-extension
-
-
-## Sponsors
+### Sponsors
 
 [Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=StefH) and [Dapper Plus](https://dapper-plus.net/?utm_source=StefH) are major sponsors and proud to contribute to the development of **WebJobs.Extensions.Ftp**.
 

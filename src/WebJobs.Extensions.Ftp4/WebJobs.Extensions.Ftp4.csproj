@@ -17,13 +17,14 @@
 
     <ItemGroup>
         <None Include="../../resources/icon.png" Pack="true" PackagePath="" />
+        <None Include="../../PackageReadme.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentFTP" Version="37.0.2" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.29" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
